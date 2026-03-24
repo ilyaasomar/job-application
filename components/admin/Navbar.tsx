@@ -14,9 +14,10 @@ import { useTheme } from "next-themes";
 import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { SidebarTrigger } from "../ui/sidebar";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 
 const Navbar = () => {
+  const { data: session } = useSession();
   const { theme, setTheme } = useTheme();
   return (
     <nav className="px-6 py-4 flex items-center justify-between sticky top-0 bg-background z-10 border-b">
@@ -25,7 +26,9 @@ const Navbar = () => {
 
       {/* RIGHT SIDE */}
       <div className="flex items-center gap-4">
-        <Link href="/admin">Dashboard</Link>
+        {/* <Link href="/admin">Dashboard</Link> */}
+        <h2 className="text-md font-semibold">{session?.user?.name}</h2>
+
         {/* THEME  */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>

@@ -20,6 +20,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarSeparator,
+  useSidebar,
 } from "../ui/sidebar";
 import Link from "next/link";
 import {
@@ -33,8 +34,10 @@ import { cn } from "@/lib/utils";
 import { styles } from "@/app/styles";
 import { usePathname } from "next/navigation";
 import { signOut } from "next-auth/react";
+import { Logo, LogoIcon } from "./logo";
 
 const AppSidebar = () => {
+  const { state } = useSidebar();
   const pathname = usePathname();
   const routes = [
     {
@@ -81,16 +84,15 @@ const AppSidebar = () => {
       isActive: pathname.startsWith("/admin/test"),
     },
   ];
+
+  console.log(state);
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="py-4">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
-              <Link href="/admin">
-                <Award className="w-12 h-12" />
-                <span>Ilyas Dev</span>
-              </Link>
+              {state === "expanded" ? <Logo /> : <LogoIcon />}
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>

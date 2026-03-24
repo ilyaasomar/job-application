@@ -50,8 +50,8 @@ model User {
   id        String  @id @default(cuid())
   name      String
   email     String  @unique
-  password  String
-  role      Role
+  password  String?
+  role      Role    @default(EMPLOYER)
   avatarUrl String?
 
   companies    CompanyMember[]

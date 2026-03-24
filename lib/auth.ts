@@ -46,12 +46,54 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   ],
 
   callbacks: {
-    async jwt({ token, user }) {
+    // ✅ This runs on every sign-in — Google users get created here
+    async signIn({ user, account }) {
+      if (account?.provider === "google") {
+        try {
+          const existUser = await prisma.user.findUnique({
+            where: {
+              email: user?.email as string,
+            },
+          });
+
+          if (!existUser) {
+            const newUser = await prisma.user.create({
+              data: {
+                name: user?.name as string,
+                email: user?.email as string,
+                avatarUrl: (user?.image as string) ?? "",
+                password: "",
+                role: "EMPLOYER",
+              },
+            });
+            user.id = newUser.id;
+          } else {
+            user.id = existUser.id;
+          }
+
+          return true;
+        } catch (error) {
+          console.error("Error creating Google user:", error);
+          return false;
+        }
+      }
+
+      return true;
+    },
+    async jwt({ token, user, account }) {
       if (user) {
         token.id = user.id;
         token.name = user.name;
         token.email = user.email;
         token.role = (user as User).role;
+      }
+      // ✅ For Google, role may not be on the user object — fetch from DB
+      if (account?.provider === "google" && token.email && !token.role) {
+        const dbUser = await prisma.user.findUnique({
+          where: { email: token.email },
+        });
+        token.role = dbUser?.role;
+        token.id = dbUser?.id;
       }
       return token;
     },
@@ -60,6 +102,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.id = token.id as string;
         session.user.name = token.name as string;
         session.user.email = token.email as string;
+        // session.user.role = token.role as Role;
       }
       return session;
     },

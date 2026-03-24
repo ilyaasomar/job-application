@@ -99,7 +99,8 @@ const SignIn = () => {
                       {...field}
                       id="signin-form-email"
                       placeholder="johndoe@gmail.com"
-                      autoComplete="off"
+                      autoComplete="on"
+                      disabled={loading}
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
@@ -121,7 +122,8 @@ const SignIn = () => {
                       type="password"
                       id="signin-form-password"
                       placeholder="••••••••"
-                      autoComplete="off"
+                      autoComplete="on"
+                      disabled={loading}
                     />
                     {fieldState.invalid && (
                       <FieldError errors={[fieldState.error]} />
