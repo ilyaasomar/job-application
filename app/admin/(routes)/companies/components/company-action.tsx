@@ -1,5 +1,4 @@
 "use client";
-import * as React from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
@@ -7,7 +6,6 @@ import * as z from "zod";
 
 import {
   Field,
-  FieldDescription,
   FieldError,
   FieldGroup,
   FieldLabel,
@@ -32,32 +30,66 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z.object({
   company_name: z
     .string()
     .min(2, "Company name must be at least 2 characters.")
     .max(32, "Company name must be at most 32 characters."),
-  logoUrl: z.string(),
+  logoUrl: z.string().min(1, "Logo must be chosen."),
   description: z
     .string()
     .min(20, "Description must be at least 20 characters.")
     .max(100, "Description must be at most 100 characters."),
-  industry: z
-    .string()
-    .min(2, "Industry must be at least 2 characters.")
-    .max(32, "Industry must be at most 32 characters."),
+  industry: z.string().min(1, "Industry must be selected."),
   location: z
     .string()
     .min(2, "Location must be at least 2 characters.")
     .max(32, "Location must be at most 32 characters."),
 });
+export const industries = [
+  { value: "technology", label: "Technology & IT" },
+  { value: "ecommerce", label: "E-commerce & Retail" },
+  { value: "manufacturing", label: "Manufacturing & Industrial" },
+  { value: "finance", label: "Finance & Banking" },
+  { value: "fintech", label: "Fintech" },
+  { value: "healthcare", label: "Healthcare & Life Sciences" },
+  { value: "education", label: "Education & E-learning" },
+  { value: "logistics", label: "Logistics & Transportation" },
+  { value: "real_estate", label: "Real Estate & Construction" },
+  { value: "media", label: "Media & Entertainment" },
+  { value: "hospitality", label: "Hospitality & Food Services" },
+  { value: "energy", label: "Energy & Utilities" },
+  { value: "government", label: "Government & Public Sector" },
+  { value: "nonprofit", label: "Non-Profit & NGO" },
+  { value: "professional_services", label: "Professional Services" },
+  { value: "telecommunications", label: "Telecommunications" },
+  { value: "agriculture", label: "Agriculture & Farming" },
+  { value: "automotive", label: "Automotive" },
+  { value: "aerospace", label: "Aerospace & Defense" },
+  { value: "pharmaceutical", label: "Pharmaceuticals" },
+  { value: "biotechnology", label: "Biotechnology" },
+  { value: "insurance", label: "Insurance" },
+  { value: "marketing", label: "Marketing & Advertising" },
+  { value: "hr_recruiting", label: "HR & Recruiting" },
+  { value: "legal", label: "Legal Services" },
+  { value: "gaming", label: "Gaming & Esports" },
+  { value: "ai_ml", label: "Artificial Intelligence & Machine Learning" },
+  { value: "cybersecurity", label: "Cybersecurity" },
+  { value: "blockchain", label: "Blockchain & Web3" },
+  { value: "other", label: "Other" },
+];
+
 interface CompanyActionsProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
 }
 const CompanyActions = ({ isOpen, setIsOpen }: CompanyActionsProps) => {
   const isEditMode = false;
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -69,7 +101,37 @@ const CompanyActions = ({ isOpen, setIsOpen }: CompanyActionsProps) => {
     },
   });
 
-  function onSubmit(data: z.infer<typeof formSchema>) {}
+  const createMutation = useMutation({
+    mutationFn: async (values: z.infer<typeof formSchema>) => {
+      const response = await fetch("/api/companies", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message);
+      return data;
+    },
+    onSuccess: (data) => {
+      toast.success(data.message);
+      setIsOpen(false);
+      router.refresh();
+      form.reset();
+    },
+    onError: (error: unknown) => {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
+    },
+  });
+
+  // update mutation
+  const updateMutation = useMutation({});
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    createMutation.mutate(values);
+  }
   return (
     <ActionDialog open={isOpen} setOpen={setIsOpen}>
       <form id="company-form" onSubmit={form.handleSubmit(onSubmit)}>
@@ -87,6 +149,7 @@ const CompanyActions = ({ isOpen, setIsOpen }: CompanyActionsProps) => {
                     aria-invalid={fieldState.invalid}
                     placeholder="Company Name"
                     autoComplete="on"
+                    disabled={createMutation.isPending}
                   />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
@@ -100,40 +163,27 @@ const CompanyActions = ({ isOpen, setIsOpen }: CompanyActionsProps) => {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="company-logo">Company Logo</FieldLabel>{" "}
-                  <Input id="picture" type="file" />
+                  <FieldLabel htmlFor="company-logo">Company Logo</FieldLabel>
+                  <Input
+                    id="company-logo"
+                    type="file"
+                    accept="image/*"
+                    aria-invalid={fieldState.invalid}
+                    disabled={createMutation.isPending}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+
+                      const reader = new FileReader();
+                      reader.onload = () => {
+                        field.onChange(reader.result as string); // sets logoUrl = base64 string in RHF
+                      };
+                      reader.readAsDataURL(file);
+                    }}
+                  />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
-                </Field>
-              )}
-            />
-
-            <Controller
-              name="industry"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field className="w-full">
-                  <FieldLabel>Department</FieldLabel>
-                  <Select>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Choose department" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectGroup>
-                        <SelectItem value="engineering">Engineering</SelectItem>
-                        <SelectItem value="design">Design</SelectItem>
-                        <SelectItem value="marketing">Marketing</SelectItem>
-                        <SelectItem value="sales">Sales</SelectItem>
-                        <SelectItem value="support">
-                          Customer Support
-                        </SelectItem>
-                        <SelectItem value="hr">Human Resources</SelectItem>
-                        <SelectItem value="finance">Finance</SelectItem>
-                        <SelectItem value="operations">Operations</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
                 </Field>
               )}
             />
@@ -150,10 +200,42 @@ const CompanyActions = ({ isOpen, setIsOpen }: CompanyActionsProps) => {
                     aria-invalid={fieldState.invalid}
                     placeholder="Company Address"
                     autoComplete="on"
+                    disabled={createMutation.isPending}
                   />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
                   )}
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="industry"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid} className="w-full">
+                  <FieldLabel>Industry</FieldLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    disabled={createMutation.isPending}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Choose Industry" />
+                    </SelectTrigger>
+                    <SelectContent className="overflow-y-auto max-h-50">
+                      <SelectGroup>
+                        {industries.map((industry) => (
+                          <SelectItem
+                            key={industry.value}
+                            value={industry.value}
+                          >
+                            {industry.label}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
                 </Field>
               )}
             />
@@ -172,6 +254,7 @@ const CompanyActions = ({ isOpen, setIsOpen }: CompanyActionsProps) => {
                       rows={6}
                       className="min-h-24 resize-none"
                       aria-invalid={fieldState.invalid}
+                      disabled={createMutation.isPending}
                     />
                     <InputGroupAddon align="block-end">
                       <InputGroupText className="tabular-nums">
@@ -194,7 +277,7 @@ const CompanyActions = ({ isOpen, setIsOpen }: CompanyActionsProps) => {
               type="button"
               variant="outline"
               onClick={() => form.reset()}
-              //   disabled={isEditMode}
+              disabled={isEditMode || createMutation?.isPending}
             >
               Reset
             </Button>
@@ -202,13 +285,13 @@ const CompanyActions = ({ isOpen, setIsOpen }: CompanyActionsProps) => {
               type="submit"
               form="company-form"
               className={`cursor-pointer ${styles.primaryBgColor} hover:${styles.primaryBgColor}`}
-              //   disabled={
-              //     isEditMode
-              //       ? updateMutation?.isPending
-              //       : createMutation?.isPending
-              //   }
+              disabled={
+                isEditMode
+                  ? updateMutation?.isPending
+                  : createMutation?.isPending
+              }
             >
-              {/* {isEditMode && updateMutation?.isPending ? (
+              {isEditMode && updateMutation?.isPending ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin" />
                   Updating....
@@ -220,9 +303,9 @@ const CompanyActions = ({ isOpen, setIsOpen }: CompanyActionsProps) => {
                 </>
               ) : isEditMode ? (
                 "Update"
-              ) : ( */}
-              Create
-              {/* )} */}
+              ) : (
+                "Create"
+              )}
             </Button>
           </Field>
         </FieldGroup>

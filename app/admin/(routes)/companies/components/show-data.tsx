@@ -7,8 +7,16 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import { columns } from "./column";
 import CompanyActions from "./company-action";
-
-const ShowCompaniesData = () => {
+interface CompanyProps {
+  serialNo: number;
+  id: string;
+  company_name: string;
+  logoUrl: string | null;
+  description: string | null;
+  industry: string | null;
+  location: string | null;
+}
+const ShowCompaniesData = ({ companies }: { companies: CompanyProps[] }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   return (
     <div className="p-3">
@@ -25,7 +33,7 @@ const ShowCompaniesData = () => {
       {/* show data */}
       <div className="mt-6">
         <CompanyActions isOpen={isOpen} setIsOpen={setIsOpen} />
-        <DataTable columns={columns} data={[]} />
+        <DataTable columns={columns} data={companies} />
       </div>
     </div>
   );

@@ -1,24 +1,38 @@
 "use client";
 
 import { ColumnDef } from "@tanstack/react-table";
+import Image from "next/image";
 
 export type CompanyColumn = {
+  serialNo: number;
   id: string;
-  name: string;
-  logoUrl: string;
-  description: string;
-  industry: string;
-  location: string;
+  company_name: string;
+  logoUrl: string | null;
+  description: string | null;
+  industry: string | null;
+  location: string | null;
 };
 
 export const columns: ColumnDef<CompanyColumn>[] = [
   {
-    accessorKey: "name",
+    accessorKey: "serialNo",
+    header: "No.",
+  },
+  {
+    accessorKey: "company_name",
     header: "Name",
   },
   {
     accessorKey: "logoUrl",
     header: "Logo",
+    cell: ({ row }) => (
+      <Image
+        src={row?.original?.logoUrl || ""}
+        width={30}
+        height={30}
+        alt="logo"
+      />
+    ),
   },
   {
     accessorKey: "description",

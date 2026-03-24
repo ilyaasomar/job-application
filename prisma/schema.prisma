@@ -15,7 +15,6 @@ datasource db {
 enum Role {
   SEEKER
   EMPLOYER
-  ADMIN
 }
 
 enum JobType {
@@ -54,8 +53,8 @@ model User {
   role      Role    @default(EMPLOYER)
   avatarUrl String?
 
-  companies    CompanyMember[]
-  jobs         Job[]           @relation("PostedJobs")
+  companies    Company[]
+  jobs         Job[]         @relation("PostedJobs")
   applications Application[]
 
   createdAt DateTime @default(now())
@@ -70,23 +69,12 @@ model Company {
   industry    String?
   location    String?
 
-  members CompanyMember[]
-  jobs    Job[]
+  userId String
+  user   User?  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  jobs   Job[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-}
-
-model CompanyMember {
-  id        String @id @default(cuid())
-  userId    String
-  companyId String
-  role      String
-
-  user    User    @relation(fields: [userId], references: [id])
-  company Company @relation(fields: [companyId], references: [id])
-
-  @@unique([userId, companyId])
 }
 
 model Job {
