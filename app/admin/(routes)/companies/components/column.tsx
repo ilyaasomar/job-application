@@ -2,6 +2,7 @@
 
 import { ColumnDef } from "@tanstack/react-table";
 import Image from "next/image";
+import Actions from "./actions";
 
 export type CompanyColumn = {
   serialNo: number;
@@ -45,5 +46,18 @@ export const columns: ColumnDef<CompanyColumn>[] = [
   {
     accessorKey: "location",
     header: "Location",
+  },
+  {
+    header: "Action",
+    cell: ({ row }) => (
+      <Actions
+        id={row.original.id}
+        company_name={row.original.company_name}
+        logoUrl={row.original.logoUrl}
+        description={row.original.description}
+        industry={row.original.industry}
+        location={row.original.location}
+      />
+    ),
   },
 ];

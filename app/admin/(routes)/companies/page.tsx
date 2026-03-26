@@ -12,7 +12,6 @@ const CompanyPage = async () => {
     },
   });
 
-  console.log(companies);
   const formattedCompanies = companies.map((company, index) => ({
     serialNo: index + 1,
     id: company.id,

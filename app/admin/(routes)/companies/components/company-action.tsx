@@ -32,7 +32,8 @@ import {
 } from "@/components/ui/select";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { Loader2 } from "lucide-react";
+import { Loader2, Vault } from "lucide-react";
+import { useEffect } from "react";
 
 const formSchema = z.object({
   company_name: z
@@ -86,9 +87,21 @@ export const industries = [
 interface CompanyActionsProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
+  selectedCompany?: {
+    id: string;
+    company_name: string;
+    logoUrl: string | null;
+    description: string | null;
+    industry: string | null;
+    location: string | null;
+  };
 }
-const CompanyActions = ({ isOpen, setIsOpen }: CompanyActionsProps) => {
-  const isEditMode = false;
+const CompanyActions = ({
+  isOpen,
+  setIsOpen,
+  selectedCompany,
+}: CompanyActionsProps) => {
+  const isEditMode = !!selectedCompany?.id;
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -100,6 +113,20 @@ const CompanyActions = ({ isOpen, setIsOpen }: CompanyActionsProps) => {
       location: "",
     },
   });
+
+  // append the data to the form
+
+  useEffect(() => {
+    if (selectedCompany) {
+      form.reset({
+        company_name: selectedCompany.company_name,
+        logoUrl: selectedCompany.logoUrl || "",
+        description: selectedCompany.description || "",
+        industry: selectedCompany.industry || "",
+        location: selectedCompany.location || "",
+      });
+    }
+  }, [selectedCompany]);
 
   const createMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
@@ -128,9 +155,37 @@ const CompanyActions = ({ isOpen, setIsOpen }: CompanyActionsProps) => {
   });
 
   // update mutation
-  const updateMutation = useMutation({});
+  const updateMutation = useMutation({
+    mutationFn: async (values: z.infer<typeof formSchema>) => {
+      const response = await fetch(`/api/companies/${selectedCompany?.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message);
+      return data;
+    },
+    onSuccess: (data) => {
+      toast.success(data.message);
+      setIsOpen(false);
+      router.refresh();
+      form.reset();
+    },
+    onError: (error: unknown) => {
+      if (error instanceof Error) {
+        toast.error(error.message);
+      }
+    },
+  });
   function onSubmit(values: z.infer<typeof formSchema>) {
-    createMutation.mutate(values);
+    if (isEditMode) {
+      updateMutation.mutate(values);
+    } else {
+      createMutation.mutate(values);
+    }
   }
   return (
     <ActionDialog open={isOpen} setOpen={setIsOpen}>
@@ -149,7 +204,11 @@ const CompanyActions = ({ isOpen, setIsOpen }: CompanyActionsProps) => {
                     aria-invalid={fieldState.invalid}
                     placeholder="Company Name"
                     autoComplete="on"
-                    disabled={createMutation.isPending}
+                    disabled={
+                      isEditMode
+                        ? updateMutation.isPending
+                        : createMutation.isPending
+                    }
                   />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
@@ -169,7 +228,11 @@ const CompanyActions = ({ isOpen, setIsOpen }: CompanyActionsProps) => {
                     type="file"
                     accept="image/*"
                     aria-invalid={fieldState.invalid}
-                    disabled={createMutation.isPending}
+                    disabled={
+                      isEditMode
+                        ? updateMutation.isPending
+                        : createMutation.isPending
+                    }
                     onChange={(e) => {
                       const file = e.target.files?.[0];
                       if (!file) return;
@@ -200,7 +263,11 @@ const CompanyActions = ({ isOpen, setIsOpen }: CompanyActionsProps) => {
                     aria-invalid={fieldState.invalid}
                     placeholder="Company Address"
                     autoComplete="on"
-                    disabled={createMutation.isPending}
+                    disabled={
+                      isEditMode
+                        ? updateMutation.isPending
+                        : createMutation.isPending
+                    }
                   />
                   {fieldState.invalid && (
                     <FieldError errors={[fieldState.error]} />
@@ -218,7 +285,9 @@ const CompanyActions = ({ isOpen, setIsOpen }: CompanyActionsProps) => {
                   <Select
                     onValueChange={field.onChange}
                     value={field.value}
-                    disabled={createMutation.isPending}
+                    disabled={ isEditMode
+                        ? updateMutation.isPending
+                        : createMutation.isPending}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Choose Industry" />
@@ -254,7 +323,9 @@ const CompanyActions = ({ isOpen, setIsOpen }: CompanyActionsProps) => {
                       rows={6}
                       className="min-h-24 resize-none"
                       aria-invalid={fieldState.invalid}
-                      disabled={createMutation.isPending}
+                      disabled={ isEditMode
+                        ? updateMutation.isPending
+                        : createMutation.isPending}
                     />
                     <InputGroupAddon align="block-end">
                       <InputGroupText className="tabular-nums">
