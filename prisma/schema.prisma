@@ -20,19 +20,15 @@ enum Role {
 enum JobType {
   FULL_TIME
   PART_TIME
-  CONTRACT
-  INTERNSHIP
 }
 
 enum ExperienceLevel {
   JUNIOR
   MID
   SENIOR
-  LEAD
 }
 
 enum JobStatus {
-  DRAFT
   ACTIVE
   CLOSED
 }
@@ -78,18 +74,16 @@ model Company {
 }
 
 model Job {
-  id           String  @id @default(cuid())
-  title        String
-  slug         String  @unique
-  description  String
-  requirements String?
+  id          String @id @default(cuid())
+  title       String
+  slug        String @unique
+  description String
 
   type            JobType
   experienceLevel ExperienceLevel
-  status          JobStatus       @default(DRAFT)
+  status          JobStatus       @default(ACTIVE)
 
   location String?
-  isRemote Boolean @default(false)
 
   salaryMin Int?
   salaryMax Int?

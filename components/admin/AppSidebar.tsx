@@ -76,16 +76,8 @@ const AppSidebar = () => {
       icon: User,
       isActive: pathname.startsWith("/admin/users"),
     },
-    {
-      id: 6,
-      title: "Test",
-      url: "/admin/test",
-      icon: Home,
-      isActive: pathname.startsWith("/admin/test"),
-    },
   ];
 
-  console.log(state);
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="py-4">

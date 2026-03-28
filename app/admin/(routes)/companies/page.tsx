@@ -22,7 +22,7 @@ const CompanyPage = async () => {
     location: company.location,
   }));
   return (
-    <div className="p-4">
+    <div className="py-4 px-1">
       <ShowCompaniesData companies={formattedCompanies} />
     </div>
   );
