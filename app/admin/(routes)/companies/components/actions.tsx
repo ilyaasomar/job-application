@@ -25,6 +25,8 @@ const Actions = ({
   location,
 }: ActionProps) => {
   const [open, setOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+
   const router = useRouter();
   //   delete mutation
   const deleteMutation = useMutation({
@@ -60,8 +62,8 @@ const Actions = ({
         isLoading={deleteMutation.isPending}
       />
       <CompanyActions
-        isOpen={open}
-        setIsOpen={setOpen}
+        isOpen={isOpen}
+        setIsOpen={setIsOpen}
         selectedCompany={{
           id,
           company_name,
@@ -76,7 +78,7 @@ const Actions = ({
       <div className="flex items-center gap-x-3">
         <button
           className={`w-8 h-8 ${styles.primaryBgColor} text-white rounded-md flex items-center justify-center cursor-pointer`}
-          onClick={() => setOpen(true)}
+          onClick={() => setIsOpen(true)}
         >
           <Pencil className="w-4 h-4" />
         </button>

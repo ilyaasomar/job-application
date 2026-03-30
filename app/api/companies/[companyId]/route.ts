@@ -86,5 +86,8 @@ export const DELETE = async (
       { message: "Company deleted successfully!", data: deletedCompany },
       { status: 200 },
     );
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+    return NextResponse.json({ message: error }, { status: 500 });
+  }
 };

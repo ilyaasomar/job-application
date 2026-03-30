@@ -7,7 +7,6 @@ import {
   ChevronUp,
   DollarSign,
   User,
-  Award,
 } from "lucide-react";
 import {
   Sidebar,
@@ -33,10 +32,12 @@ import {
 import { cn } from "@/lib/utils";
 import { styles } from "@/app/styles";
 import { usePathname } from "next/navigation";
-import { signOut } from "next-auth/react";
+import { signOut, useSession } from "next-auth/react";
 import { Logo, LogoIcon } from "./logo";
 
 const AppSidebar = () => {
+  const session = useSession();
+
   const { state } = useSidebar();
   const pathname = usePathname();
   const routes = [
@@ -71,10 +72,10 @@ const AppSidebar = () => {
     },
     {
       id: 5,
-      title: "Users",
-      url: "/admin/users",
+      title: "Applicants",
+      url: "/admin/applicants",
       icon: User,
-      isActive: pathname.startsWith("/admin/users"),
+      isActive: pathname.startsWith("/admin/applicants"),
     },
   ];
 
@@ -125,12 +126,16 @@ const AppSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <SidebarMenu>
+        <SidebarMenu className="bg-gray-200 rounded-md py-1">
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton>
-                  <User2 /> John Doe <ChevronUp className="ml-auto" />
+                <SidebarMenuButton className="hover:bg-gray-200 cursor-pointer">
+                  <User2 />
+                  <span className="font-semibold text-md">
+                    {session.data?.user?.name}
+                  </span>
+                  <ChevronUp className="ml-auto" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">

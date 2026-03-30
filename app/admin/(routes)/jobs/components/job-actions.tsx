@@ -39,19 +39,19 @@ const formSchema = z.object({
   job_title: z
     .string()
     .min(2, "Title must be at least 2 characters.")
-    .max(32, "Title must be at most 32 characters."),
+    .max(100, "Title must be at most 100 characters."),
   company_id: z.string().min(1, "Company must be selected."),
   description: z
     .string()
     .min(20, "Description must be at least 20 characters.")
-    .max(5000, "Description must be at most 100 characters."),
+    .max(5000, "Description must be at most 5000 characters."),
   type: z.string().min(1, "Type must be selected."),
   experienceLevel: z.string().min(1, "Experience must be selected."),
   status: z.string().min(1, "Status must be selected."),
   location: z
     .string()
     .min(2, "Location must be at least 2 characters.")
-    .max(32, "Location must be at most 32 characters."),
+    .max(100, "Location must be at most 100 characters."),
   salaryMin: z.number().min(1, "Minimum salary must be selected."),
   salaryMax: z.number().min(1, "Minimum salary must be selected."),
 });
@@ -66,7 +66,12 @@ interface selectedJobProps {
   salaryMin: number | null;
   salaryMax: number | null;
   company_id: string;
-  companies_data: any;
+  companies_data:
+    | {
+        id: string;
+        name: string;
+      }[]
+    | null;
 }
 interface CompanyProps {
   id: string;
@@ -81,7 +86,7 @@ const JobActions = ({
 }: {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  company_data: CompanyProps[];
+  company_data?: CompanyProps[];
   selectedJob?: selectedJobProps;
 }) => {
   const isEditMode = selectedJob?.id;
@@ -149,7 +154,7 @@ const JobActions = ({
   //   update mutation
   const updateMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      const response = await fetch("/api/jobs", {
+      const response = await fetch(`/api/jobs/${selectedJob?.id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -168,6 +173,7 @@ const JobActions = ({
     },
     onError: (error: unknown) => {
       if (error instanceof Error) {
+        toast.error(error.message);
       }
     },
   });
@@ -455,7 +461,9 @@ const JobActions = ({
               type="button"
               variant="outline"
               onClick={() => form.reset()}
-              disabled={isEditMode || createMutation?.isPending}
+              disabled={
+                isEditMode ? updateMutation.isPending : createMutation.isPending
+              }
             >
               Reset
             </Button>

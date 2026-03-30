@@ -6,37 +6,30 @@ import { Pencil, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "sonner";
-import JobActions from "./job-actions";
+import ApplicantActions from "./applicant-actions";
+import { Role } from "@/app/generated/prisma/enums";
 interface ActionProps {
   id: string;
-  selectedJob: {
+  selectedApplicant: {
     id: string;
-    job_title: string;
-    description: string;
-    type: string;
-    experienceLevel: string;
-    status: string;
-    location: string | null;
-    salaryMin: number | null;
-    salaryMax: number | null;
-    company_id: string;
-    companies_data:
-      | {
-          id: string;
-          name: string;
-        }[]
-      | null;
+    name: string;
+    email: string;
+    password: string | null;
+    role: Role;
+    avatarUrl: string | null;
+    createdAt: string;
   };
 }
 
-const Actions = ({ id, selectedJob }: ActionProps) => {
+const Actions = ({ id, selectedApplicant }: ActionProps) => {
   const [open, setOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+
   const router = useRouter();
   //   delete mutation
   const deleteMutation = useMutation({
     mutationFn: async (id: string) => {
-      const response = await fetch(`/api/jobs/${id}`, {
+      const response = await fetch(`/api/users/${id}`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -66,22 +59,10 @@ const Actions = ({ id, selectedJob }: ActionProps) => {
         onConfirm={() => deleteMutation.mutate(id)}
         isLoading={deleteMutation.isPending}
       />
-      <JobActions
+      <ApplicantActions
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        selectedJob={{
-          id: selectedJob.id,
-          job_title: selectedJob.job_title,
-          description: selectedJob.description,
-          type: selectedJob.type,
-          experienceLevel: selectedJob.experienceLevel,
-          status: selectedJob.status,
-          location: selectedJob.location,
-          salaryMin: selectedJob.salaryMin,
-          salaryMax: selectedJob.salaryMax,
-          company_id: selectedJob.company_id,
-          companies_data: selectedJob?.companies_data,
-        }}
+        selectedApplicant={selectedApplicant}
       />
 
       {/* buttons */}

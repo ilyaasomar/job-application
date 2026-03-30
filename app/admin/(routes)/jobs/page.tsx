@@ -12,6 +12,7 @@ const JobsPage = async () => {
     include: {
       company: true,
     },
+    orderBy: { createdAt: "desc" },
   });
   const company = await prisma.company.findMany({
     where: {

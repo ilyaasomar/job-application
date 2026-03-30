@@ -32,6 +32,7 @@ export const columns: ColumnDef<CompanyColumn>[] = [
         width={30}
         height={30}
         alt="logo"
+        style={{ width: "30px", height: "auto" }}
       />
     ),
   },

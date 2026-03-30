@@ -1,4 +1,5 @@
 "use client";
+import { Role } from "@/app/generated/prisma/enums";
 import { styles } from "@/app/styles";
 import { DataTable } from "@/components/admin/reusables/data-table";
 import Header from "@/components/admin/reusables/header";
@@ -6,64 +7,43 @@ import { Button } from "@/components/ui/button";
 import { Plus } from "lucide-react";
 import React from "react";
 import { columns } from "./column";
-import JobActions from "./job-actions";
-interface JobProps {
+import ApplicantActions from "./applicant-actions";
+interface ApplicantsProps {
   serialNo: number;
   id: string;
-  job_title: string;
-  description: string;
-  type: string;
-  experienceLevel: string;
-  status: string;
-  location: string | null;
-  salaryMin: number | null;
-  salaryMax: number | null;
-  company_id: string;
-  company_name: string;
-  companies_data:
-    | {
-        id: string;
-        name: string;
-      }[]
-    | null;
+  name: string;
+  email: string;
+  password: string | null;
+  role: Role;
+  avatarUrl: string | null;
+  createdAt: string;
 }
 [];
-
-interface CompanyProps {
-  id: string;
-  name: string;
-}
-const ShowJobData = ({
-  jobs,
-  company_data,
+const ShowApplicantData = ({
+  applicants,
 }: {
-  jobs: JobProps[];
-  company_data: CompanyProps[];
+  applicants: ApplicantsProps[];
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   return (
     <div className="p-3">
       <div className="flex justify-between border-b pb-2">
-        <Header title="Jobs" />
+        <Header title="Applicants" />
         <Button
           className={`${styles.primaryBgColor} text-white py-5 rounded-sm hover:${styles.primaryBgColor} cursor-pointer`}
           onClick={() => setIsOpen(true)}
         >
           <Plus className="w-5 h-5 text-white" />
-          Add Job
+          Add Applicant
         </Button>
       </div>
       {/* show data */}
       <div className="mt-6">
-        <JobActions
-          isOpen={isOpen}
-          setIsOpen={setIsOpen}
-          company_data={company_data}
-        />
-        <DataTable columns={columns} data={jobs} />
+        <ApplicantActions isOpen={isOpen} setIsOpen={setIsOpen} />
+        <DataTable columns={columns} data={applicants} />
       </div>
     </div>
   );
 };
 
-export default ShowJobData;
+export default ShowApplicantData;

@@ -6,6 +6,8 @@ import { formatter } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import Actions from "./actions";
 import { Company } from "@/app/generated/prisma/client";
+import { Button } from "@/components/ui/button";
+import { ArrowUpDown } from "lucide-react";
 type JobsColumn = {
   serialNo: number;
   id: string;
@@ -19,7 +21,12 @@ type JobsColumn = {
   salaryMax: number | null;
   company_id: string;
   company_name: string;
-  companies_data: any;
+  companies_data:
+    | {
+        id: string;
+        name: string;
+      }[]
+    | null;
 };
 
 export const columns: ColumnDef<JobsColumn>[] = [
@@ -29,7 +36,18 @@ export const columns: ColumnDef<JobsColumn>[] = [
   },
   {
     accessorKey: "job_title",
-    header: "Title",
+    // header: "Title",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Title
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
   },
   {
     accessorKey: "company_name",
@@ -42,7 +60,7 @@ export const columns: ColumnDef<JobsColumn>[] = [
       if (row.original.type === "FULL_TIME") {
         return <Badge className={`${styles.primaryBgColor}`}>Full Time</Badge>;
       } else {
-        <Badge className={`${styles.accentBgColor}`}>Part Time</Badge>;
+        return <Badge className={`${styles.accentBgColor}`}>Part Time</Badge>;
       }
     },
   },
@@ -54,22 +72,22 @@ export const columns: ColumnDef<JobsColumn>[] = [
     accessorKey: "location",
     header: "location",
   },
-  {
-    accessorKey: "salaryMin",
-    header: "Min Salary",
-    cell: ({ row }) =>
-      row.original.salaryMin != null
-        ? formatter.format(row.original.salaryMin)
-        : "—",
-  },
-  {
-    accessorKey: "salaryMax",
-    header: "Max Salary",
-    cell: ({ row }) =>
-      row.original.salaryMax != null
-        ? formatter.format(row.original.salaryMax)
-        : "—",
-  },
+  // {
+  //   accessorKey: "salaryMin",
+  //   header: "Min Salary",
+  //   cell: ({ row }) =>
+  //     row.original.salaryMin != null
+  //       ? formatter.format(row.original.salaryMin)
+  //       : "—",
+  // },
+  // {
+  //   accessorKey: "salaryMax",
+  //   header: "Max Salary",
+  //   cell: ({ row }) =>
+  //     row.original.salaryMax != null
+  //       ? formatter.format(row.original.salaryMax)
+  //       : "—",
+  // },
 
   {
     accessorKey: "status",

@@ -34,22 +34,22 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { Loader2, Vault } from "lucide-react";
 import { useEffect } from "react";
+import { Role } from "@/app/generated/prisma/enums";
 
 const formSchema = z.object({
-  company_name: z
+  name: z
     .string()
-    .min(2, "Company name must be at least 2 characters.")
-    .max(100, "Company name must be at most 100 characters."),
-  logoUrl: z.string().min(1, "Logo must be chosen."),
-  description: z
+    .min(2, "Name must be at least 2 characters.")
+    .max(32, "Name must be at most 32 characters."),
+  email: z.string().email("Invalid email address."),
+  password: z
     .string()
-    .min(20, "Description must be at least 20 characters.")
-    .max(5000, "Description must be at most 5000 characters."),
-  industry: z.string().min(1, "Industry must be selected."),
-  location: z
-    .string()
-    .min(2, "Location must be at least 2 characters.")
-    .max(100, "Location must be at most 100 characters."),
+    .min(6, "Password must be at least 6 characters.")
+    .max(100, "Password must be at most 100 characters."),
+  role: z.nativeEnum(Role, {
+    error: () => ({ message: "Role must be selected." }),
+  }),
+  avatarUrl: z.string().min(1, "Avatar must be chosen."),
 });
 export const industries = [
   { value: "technology", label: "Technology & IT" },
@@ -84,53 +84,54 @@ export const industries = [
   { value: "other", label: "Other" },
 ];
 
-interface CompanyActionsProps {
+interface ApplicantActionsProps {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
-  selectedCompany?: {
+  selectedApplicant?: {
     id: string;
-    company_name: string;
-    logoUrl: string | null;
-    description: string | null;
-    industry: string | null;
-    location: string | null;
+    name: string;
+    email: string;
+    password: string | null;
+    role: Role;
+    avatarUrl: string | null;
+    createdAt: string;
   };
 }
-const CompanyActions = ({
+const ApplicantActions = ({
   isOpen,
   setIsOpen,
-  selectedCompany,
-}: CompanyActionsProps) => {
-  const isEditMode = !!selectedCompany?.id;
+  selectedApplicant,
+}: ApplicantActionsProps) => {
+  const isEditMode = !!selectedApplicant?.id;
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      company_name: "",
-      logoUrl: "",
-      description: "",
-      industry: "",
-      location: "",
+      name: "",
+      email: "",
+      password: "",
+      role: Role.SEEKER,
+      avatarUrl: "",
     },
   });
 
   // append the data to the form
 
   useEffect(() => {
-    if (selectedCompany) {
+    if (selectedApplicant) {
       form.reset({
-        company_name: selectedCompany.company_name,
-        logoUrl: selectedCompany.logoUrl || "",
-        description: selectedCompany.description || "",
-        industry: selectedCompany.industry || "",
-        location: selectedCompany.location || "",
+        name: selectedApplicant.name,
+        email: selectedApplicant.email,
+        password: selectedApplicant.password || "",
+        role: selectedApplicant.role,
+        avatarUrl: selectedApplicant.avatarUrl || "",
       });
     }
-  }, [selectedCompany]);
+  }, [selectedApplicant]);
 
   const createMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      const response = await fetch("/api/companies", {
+      const response = await fetch("/api/users", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -157,7 +158,7 @@ const CompanyActions = ({
   // update mutation
   const updateMutation = useMutation({
     mutationFn: async (values: z.infer<typeof formSchema>) => {
-      const response = await fetch(`/api/companies/${selectedCompany?.id}`, {
+      const response = await fetch(`/api/users/${selectedApplicant?.id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -185,24 +186,25 @@ const CompanyActions = ({
       updateMutation.mutate(values);
     } else {
       createMutation.mutate(values);
+      //   console.log(values);
     }
   }
   return (
     <ActionDialog open={isOpen} setOpen={setIsOpen}>
-      <form id="company-form" onSubmit={form.handleSubmit(onSubmit)}>
+      <form id="applicant-form" onSubmit={form.handleSubmit(onSubmit)}>
         <FieldGroup>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             <Controller
-              name="company_name"
+              name="name"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="company-name">Company Name</FieldLabel>{" "}
+                  <FieldLabel htmlFor="name">Name</FieldLabel>{" "}
                   <Input
                     {...field}
-                    id="company-name"
+                    id="name"
                     aria-invalid={fieldState.invalid}
-                    placeholder="Company Name"
+                    placeholder="Name"
                     autoComplete="on"
                     disabled={
                       isEditMode
@@ -218,13 +220,63 @@ const CompanyActions = ({
             />
 
             <Controller
-              name="logoUrl"
+              name="email"
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="company-logo">Company Logo</FieldLabel>
+                  <FieldLabel htmlFor="email">Email</FieldLabel>{" "}
                   <Input
-                    id="company-logo"
+                    {...field}
+                    id="email"
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Email"
+                    autoComplete="on"
+                    disabled={
+                      isEditMode
+                        ? updateMutation.isPending
+                        : createMutation.isPending
+                    }
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+            <Controller
+              name="password"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="password">Password</FieldLabel>{" "}
+                  <Input
+                    {...field}
+                    id="password"
+                    type="password"
+                    aria-invalid={fieldState.invalid}
+                    placeholder="Password"
+                    autoComplete="on"
+                    disabled={
+                      isEditMode
+                        ? updateMutation.isPending
+                        : createMutation.isPending
+                    }
+                  />
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="avatarUrl"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel htmlFor="avatar">Avatar</FieldLabel>
+                  <Input
+                    id="avatar"
                     type="file"
                     accept="image/*"
                     aria-invalid={fieldState.invalid}
@@ -250,93 +302,31 @@ const CompanyActions = ({
                 </Field>
               )}
             />
-
             <Controller
-              name="location"
+              name="role"
               control={form.control}
               render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="location">Company Address</FieldLabel>{" "}
-                  <Input
-                    {...field}
-                    id="location"
-                    aria-invalid={fieldState.invalid}
-                    placeholder="Company Address"
-                    autoComplete="on"
+                <Field data-invalid={fieldState.invalid} className="w-full">
+                  <FieldLabel>Role</FieldLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value}
                     disabled={
                       isEditMode
                         ? updateMutation.isPending
                         : createMutation.isPending
                     }
-                  />
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
-                </Field>
-              )}
-            />
-
-            <Controller
-              name="industry"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid} className="w-full">
-                  <FieldLabel>Industry</FieldLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    disabled={ isEditMode
-                        ? updateMutation.isPending
-                        : createMutation.isPending}
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Choose Industry" />
+                      <SelectValue placeholder="Choose role" />
                     </SelectTrigger>
                     <SelectContent className="overflow-y-auto max-h-50">
                       <SelectGroup>
-                        {industries.map((industry) => (
-                          <SelectItem
-                            key={industry.value}
-                            value={industry.value}
-                          >
-                            {industry.label}
-                          </SelectItem>
-                        ))}
+                        <SelectItem value="EMPLOYER">Employer</SelectItem>
+                        <SelectItem value="SEEKER">Seeker</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
-                </Field>
-              )}
-            />
-
-            <Controller
-              name="description"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel htmlFor="description">Description</FieldLabel>
-                  <InputGroup>
-                    <InputGroupTextarea
-                      {...field}
-                      id="description"
-                      placeholder="Description of the company"
-                      rows={6}
-                      className="min-h-24 resize-none"
-                      aria-invalid={fieldState.invalid}
-                      disabled={ isEditMode
-                        ? updateMutation.isPending
-                        : createMutation.isPending}
-                    />
-                    <InputGroupAddon align="block-end">
-                      <InputGroupText className="tabular-nums">
-                        {field.value.length}/100 characters
-                      </InputGroupText>
-                    </InputGroupAddon>
-                  </InputGroup>
-
-                  {fieldState.invalid && (
-                    <FieldError errors={[fieldState.error]} />
-                  )}
                 </Field>
               )}
             />
@@ -354,7 +344,7 @@ const CompanyActions = ({
             </Button>
             <Button
               type="submit"
-              form="company-form"
+              form="applicant-form"
               className={`cursor-pointer ${styles.primaryBgColor} hover:${styles.primaryBgColor}`}
               disabled={
                 isEditMode
@@ -385,4 +375,4 @@ const CompanyActions = ({
   );
 };
 
-export default CompanyActions;
+export default ApplicantActions;
