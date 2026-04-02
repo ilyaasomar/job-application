@@ -1,122 +1,222 @@
+"use client";
+import JobCardsList from "./card-lists";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { Input } from "@/components/ui/input";
+import { cn } from "@/lib/utils";
+import { useQuery } from "@tanstack/react-query";
+import { is } from "date-fns/locale";
 import React from "react";
-import JobSidebar from "./job-sidebar";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import Link from "next/link";
-import Image from "next/image";
-const jobs = [
+const categories = [
   {
     id: 1,
-    title: "Senior Developer",
-    description:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aspernatur accusamus quasi suscipit saepe. Tenetur explicabo ullam praesentium reprehenderit earum veniam, eaque officiis optio aspernatur accusantium eveniet tempora amet quasi consectetur.",
-    type: "Full-time",
-    experienceLevel: "Senior",
-    status: "Active",
-    location: "Remote",
-    salaryMin: 50000,
-    salaryMax: 80000,
-    company_id: "1",
-    companies_data: [
-      {
-        id: "1",
-        name: "Google",
-      },
-    ],
+    name: "Engineering",
   },
   {
     id: 2,
-    title: "Mid-level Developer",
-    description:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aspernatur accusamus quasi suscipit saepe. Tenetur explicabo ullam praesentium reprehenderit earum veniam, eaque officiis optio aspernatur accusantium eveniet tempora amet quasi consectetur.",
-    type: "Full-time",
-    experienceLevel: "Mid-level",
-    status: "Active",
-    location: "Remote",
-    salaryMin: 40000,
-    salaryMax: 60000,
-    company_id: "1",
-    companies_data: [
-      {
-        id: "1",
-        name: "Google",
-      },
-    ],
+    name: "Design",
   },
   {
     id: 3,
-    title: "Junior Developer",
-    description:
-      "Lorem ipsum dolor sit amet consectetur, adipisicing elit. Aspernatur accusamus quasi suscipit saepe. Tenetur explicabo ullam praesentium reprehenderit earum veniam, eaque officiis optio aspernatur accusantium eveniet tempora amet quasi consectetur.",
-    type: "Full-time",
-    experienceLevel: "Junior",
-    status: "Active",
-    location: "Remote",
-    salaryMin: 30000,
-    salaryMax: 50000,
-    company_id: "1",
-    companies_data: [
-      {
-        id: "1",
-        name: "Google",
-      },
-    ],
+    name: "Marketing",
+  },
+  {
+    id: 4,
+    name: "Sales",
+  },
+  {
+    id: 5,
+    name: "Finance",
+  },
+  {
+    id: 6,
+    name: "Human Resources",
+  },
+  {
+    id: 7,
+    name: "Customer Service",
   },
 ];
-
 const JobsPage = () => {
+  const [searchedTerm, setSearchedTerm] = React.useState("");
+  const [isJuniorActive, setIsJuniorActive] = React.useState(false);
+  const [isMidActive, setIsMidActive] = React.useState(false);
+  const [isSeniorActive, setIsSeniorActive] = React.useState(false);
+
+  const [selectedCategories, setSelectedCategories] = React.useState<number[]>(
+    [],
+  );
+
+  const filteredJobs = {
+    searchedTerm: searchedTerm,
+    category: selectedCategories.join(","),
+    level: isJuniorActive
+      ? "junior"
+      : isMidActive
+        ? "mid"
+        : isSeniorActive
+          ? "senior"
+          : "",
+  };
+
+  const handleChange = (field: string, value: boolean) => {
+    if (field === "junior") {
+      // remove others and set junior to active
+      setIsMidActive(false);
+      setIsSeniorActive(false);
+      setIsJuniorActive(value);
+      filteredJobs.level = "junior";
+    } else if (field === "mid") {
+      // remove others and set mid to active
+      setIsJuniorActive(false);
+      filteredJobs.level = "mid";
+      setIsSeniorActive(false);
+      setIsMidActive(value);
+    } else if (field === "senior") {
+      // remove others and set senior to active
+      setIsJuniorActive(false);
+      filteredJobs.level = "senior";
+      setIsMidActive(false);
+      setIsSeniorActive(value);
+    }
+  };
+
+  // user useffect to log the changes in the filters
+  // React.useEffect(() => {
+  //   const getData = async () => {
+  //     const response = await fetch(
+  //       `/api/jobs?search=${filteredJobs.searchedTerm}&category=${filteredJobs.category}&level=${filteredJobs.level}`,
+  //     );
+  //     const data = await response.json();
+  //     console.log(data);
+  //   };
+  //   getData();
+  // }, [isJuniorActive, isMidActive, isSeniorActive, searchedTerm]);
+
+  // get data from the API
+  const { data, isLoading } = useQuery({
+    queryKey: ["jobs", filteredJobs],
+    queryFn: async () => {
+      const response = await fetch(
+        `/api/jobs?search=${filteredJobs.searchedTerm}&category=${filteredJobs.category}&level=${filteredJobs.level}`,
+      );
+      const data = await response.json();
+      return data;
+    },
+  });
+
+  console.log(data);
+
   return (
-    <div className="p-4 ">
-      <h1 className="text-2xl font-bold mb-4">Available Jobs</h1>
-      <p>Show 110 available jobs</p>
+    <div className="w-full flex">
+      {/* sidebar */}
+      <div className="bg-gray-50 w-1/4 h-full p-4 mt-3 rounded-md ">
+        {/* form that handles all these filters */}
+        <div className="mb-4 flex flex-col items-start gap-y-2">
+          <h2 className="font-semibold text-black">Refine Search</h2>
+          <Input
+            placeholder="Search for jobs..."
+            className="mb-4"
+            value={searchedTerm}
+            onChange={(e) => setSearchedTerm(e.target.value)}
+          />
+        </div>
 
-      {/* job cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-        {jobs.map((job) => (
-          <Card key={job.id} className="p-6 w-full flex flex-col gap-y-2 ">
-            {/* company logo */}
-            <div className="w-14 h-14 rounded-sm border overflow-hidden">
-              <img
-                src="/images/logo-icon.svg"
-                width={50}
-                height={50}
-                alt="logo"
-              />
-            </div>
-
-            <h2 className="text-lg font-semibold">{job.title}</h2>
-            <p>
-              {job.description.length > 300
-                ? job.description.slice(0, 300) + "...."
-                : job.description}
-            </p>
-            {/* badges */}
-            <div className="flex items-center gap-x-2 my-2">
-              <Badge variant="default" className="mr-2">
-                {job.type}
-              </Badge>
-              <Badge variant="default" className="mr-2">
-                {job.location}
-              </Badge>
-              <Badge variant="default" className="mr-2">
-                {job.experienceLevel}
-              </Badge>
-            </div>
-            {/* salary */}
-            <div className="flex items-center justify-between mt-4">
-              <h3 className="font-semibold">
-                CHF {job.salaryMin.toLocaleString()} - CHF{" "}
-                {job.salaryMax.toLocaleString()}
-              </h3>
-              <Link
-                href={`/jobs/${job.id}`}
-                className="text-blue-500 hover:underline"
+        {/* filter by category */}
+        <div className="mb-4 flex flex-col items-start gap-y-2">
+          <h3 className="font-medium text-gray-700">Filter by category</h3>
+          {/*  */}
+          <div className="mt-2">
+            <FieldGroup className="mx-auto w-56">
+              <Field
+                orientation="horizontal"
+                className="flex flex-col items-start"
               >
-                View Details
-              </Link>
-            </div>
-          </Card>
-        ))}
+                {categories.map((category) => (
+                  <div
+                    key={category.id}
+                    className="space-x-2 flex items-center"
+                  >
+                    <Checkbox
+                      id={`category-${category.id}`}
+                      name={`category-${category.id}`}
+                      className="w-5 h-5 bg-white border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
+                      value={category.id}
+                      onCheckedChange={() =>
+                        setSelectedCategories((prev) => {
+                          return prev.includes(category.id)
+                            ? prev.filter((id) => id !== category.id)
+                            : [...prev, category.id];
+                        })
+                      }
+                    />
+                    <FieldLabel htmlFor={`category-${category.id}`}>
+                      {category.name}
+                    </FieldLabel>
+                  </div>
+                ))}
+              </Field>
+            </FieldGroup>
+          </div>
+        </div>
+
+        {/* filter by levels */}
+        <div className="mb-4 flex flex-col items-start gap-y-2 mt-6">
+          <h3 className="font-medium text-gray-700">Filter by level</h3>
+          <div
+            className={cn(
+              `mt-2 grid grid-cols-1 lg:grid-cols-3 gap-3 cursor-pointer`,
+            )}
+          >
+            <Button
+              variant="outline"
+              size="sm"
+              className={cn(
+                `rounded-md cursor-pointer`,
+                isJuniorActive
+                  ? "bg-blue-500 hover:bg-blue-500 text-white hover:text-white"
+                  : "bg-white text-gray-700",
+              )}
+              onClick={() => handleChange("junior", true)}
+            >
+              Junior
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className={cn(
+                `rounded-md cursor-pointer`,
+                isMidActive
+                  ? "bg-blue-500 hover:bg-blue-500 text-white hover:text-white"
+                  : "bg-white text-gray-700",
+              )}
+              onClick={() => handleChange("mid", true)}
+            >
+              Mid
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className={cn(
+                `rounded-md cursor-pointer`,
+                isSeniorActive
+                  ? "bg-blue-500 hover:bg-blue-500 text-white hover:text-white"
+                  : "bg-white text-gray-700",
+              )}
+              onClick={() => handleChange("senior", true)}
+            >
+              Senior
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* middle content */}
+      <div className="w-3/4 p-4">
+        <h1 className="text-2xl font-bold mb-4">Available Jobs</h1>
+        <p>Show {data && data.length} available jobs</p>
+        <JobCardsList jobs={data} loading={isLoading} />
       </div>
     </div>
   );

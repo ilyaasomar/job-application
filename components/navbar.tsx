@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "./ui/button";
 import { styles } from "@/app/styles";
+import { Logo } from "./logo";
 const navbarLinks = [
   { name: "Home", href: "/" },
   { name: "Browse Jobs", href: "/jobs" },
@@ -13,16 +14,7 @@ const Navbar = () => {
     <nav className="w-full border-b pb-1">
       <div className="flex w-full max-w-300 mx-auto py-3">
         <div className="flex justify-between items-center w-full">
-          <Link href="/" className="block h-[60px] w-[150px]">
-            <Image
-              src="/images/the-carator-logo.svg"
-              width={150}
-              height={60}
-              alt="logo"
-              priority
-              className="h-full w-auto"
-            />
-          </Link>
+          <Logo />
           <div className="space-x-6">
             {navbarLinks.map((link) => (
               <Link key={link.name} href={link.href}>
