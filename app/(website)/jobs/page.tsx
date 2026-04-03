@@ -95,7 +95,7 @@ const JobsPage = () => {
   // }, [isJuniorActive, isMidActive, isSeniorActive, searchedTerm]);
 
   // get data from the API
-  const { data, isLoading } = useQuery({
+  const { data, isFetching } = useQuery({
     queryKey: ["jobs", filteredJobs],
     queryFn: async () => {
       const response = await fetch(
@@ -105,8 +105,6 @@ const JobsPage = () => {
       return data;
     },
   });
-
-  console.log(data);
 
   return (
     <div className="w-full flex">
@@ -178,7 +176,7 @@ const JobsPage = () => {
                   ? "bg-blue-500 hover:bg-blue-500 text-white hover:text-white"
                   : "bg-white text-gray-700",
               )}
-              onClick={() => handleChange("junior", true)}
+              onClick={() => handleChange("junior", !isJuniorActive)}
             >
               Junior
             </Button>
@@ -191,7 +189,7 @@ const JobsPage = () => {
                   ? "bg-blue-500 hover:bg-blue-500 text-white hover:text-white"
                   : "bg-white text-gray-700",
               )}
-              onClick={() => handleChange("mid", true)}
+              onClick={() => handleChange("mid", !isMidActive)}
             >
               Mid
             </Button>
@@ -204,7 +202,7 @@ const JobsPage = () => {
                   ? "bg-blue-500 hover:bg-blue-500 text-white hover:text-white"
                   : "bg-white text-gray-700",
               )}
-              onClick={() => handleChange("senior", true)}
+              onClick={() => handleChange("senior", !isSeniorActive)}
             >
               Senior
             </Button>
@@ -216,7 +214,7 @@ const JobsPage = () => {
       <div className="w-3/4 p-4">
         <h1 className="text-2xl font-bold mb-4">Available Jobs</h1>
         <p>Show {data && data.length} available jobs</p>
-        <JobCardsList jobs={data} loading={isLoading} />
+        <JobCardsList jobs={data ?? []} loading={isFetching || !data} />
       </div>
     </div>
   );

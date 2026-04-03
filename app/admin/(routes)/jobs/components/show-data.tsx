@@ -54,7 +54,7 @@ const ShowJobData = ({
         </Button>
       </div>
       {/* show data */}
-      <div className="mt-6">
+      <div className="mt-6 ">
         <JobActions
           isOpen={isOpen}
           setIsOpen={setIsOpen}

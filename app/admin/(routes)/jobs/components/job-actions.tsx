@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
+import MDEditor from "@uiw/react-md-editor";
 
 import {
   Field,
@@ -424,6 +425,28 @@ const JobActions = ({
               name="description"
               control={form.control}
               render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid} className="col-span-2">
+                  <FieldLabel htmlFor="description">Description</FieldLabel>
+                  <MDEditor
+                    value={field.value}
+                    onChange={(val) => field.onChange(val || "")}
+                    height={300}
+                    data-color-mode="light"
+                  />
+                  <p className="text-sm text-gray-400 text-right">
+                    {field.value.length}/5000 characters
+                  </p>
+                  {fieldState.invalid && (
+                    <FieldError errors={[fieldState.error]} />
+                  )}
+                </Field>
+              )}
+            />
+
+            {/* <Controller
+              name="description"
+              control={form.control}
+              render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="description">Description</FieldLabel>
                   <InputGroup>
@@ -452,7 +475,7 @@ const JobActions = ({
                   )}
                 </Field>
               )}
-            />
+            /> */}
           </div>
 
           {/* buttons */}

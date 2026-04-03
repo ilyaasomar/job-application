@@ -14,9 +14,9 @@ export default async function DashboardLayout({
   return (
     <AdminProviders defaultOpen={defaultOpen}>
       <AppSidebar />
-      <main className="w-full">
+      <main className="w-full min-w-0 overflow-hidden">
         <Navbar />
-        <div className="overflow-x-auto px-4">{children}</div>
+        <div className="overflow-x-auto w-full px-4">{children}</div>
       </main>
     </AdminProviders>
   );

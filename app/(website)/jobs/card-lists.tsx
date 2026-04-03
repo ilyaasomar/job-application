@@ -10,7 +10,6 @@ const JobCardsList = ({ jobs, loading }: { jobs: any[]; loading: boolean }) => {
       {loading ? (
         <p>Loading jobs...</p>
       ) : (
-        jobs &&
         jobs.map((job) => (
           <Card key={job.id} className="p-6 w-full flex flex-col gap-y-2 ">
             {/* company logo */}

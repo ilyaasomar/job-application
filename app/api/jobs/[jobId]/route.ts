@@ -2,6 +2,32 @@ import { auth } from "@/lib/auth";
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
+export const GET = async (
+  req: NextRequest,
+  { params }: { params: Promise<{ jobId: string }> },
+) => {
+  const { jobId } = await params;
+  console.log(jobId);
+  try {
+    const job = await prisma.job.findUnique({
+      where: {
+        id: jobId,
+      },
+      include: {
+        company: true,
+      },
+    });
+    if (!job) {
+      return NextResponse.json({ message: "Job not found" }, { status: 404 });
+    }
+    return NextResponse.json(job, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { message: "An error occurred while fetching the job" },
+      { status: 500 },
+    );
+  }
+};
 export const PATCH = async (
   req: NextRequest,
   { params }: { params: Promise<{ jobId: string }> },
