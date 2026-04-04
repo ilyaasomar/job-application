@@ -1,6 +1,22 @@
 import Navbar from "@/components/navbar";
 import { TanstackProvider } from "./query-provider";
 
+// export default function WebsiteLayout({
+//   children,
+// }: {
+//   children: React.ReactNode;
+// }) {
+//   return (
+//     <TanstackProvider>
+//       <div className="w-full">
+//         <Navbar />
+//         <div className="max-w-300 mx-auto mt-4">{children}</div>
+//       </div>
+//     </TanstackProvider>
+//   );
+// }
+
+// WebsiteLayout.tsx
 export default function WebsiteLayout({
   children,
 }: {
@@ -8,9 +24,11 @@ export default function WebsiteLayout({
 }) {
   return (
     <TanstackProvider>
-      <div className="w-full">
+      {/* min-h-screen and flex-col allow the content to fill the page */}
+      <div className="w-full min-h-screen flex flex-col">
         <Navbar />
-        <div className="max-w-300 mx-auto mt-4">{children}</div>
+        {/* flex-1 makes this div grow to fill all remaining space */}
+        <main className="flex-1 max-w-300 mx-auto w-full mt-4">{children}</main>
       </div>
     </TanstackProvider>
   );

@@ -15,12 +15,6 @@ import { Input } from "@/components/ui/input";
 
 import { ActionDialog } from "@/components/admin/reusables/action-dialog";
 
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroupTextarea,
-} from "@/components/ui/input-group";
 import { Button } from "@/components/ui/button";
 import { styles } from "@/app/styles";
 import {
@@ -33,7 +27,7 @@ import {
 } from "@/components/ui/select";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { Loader2, Vault } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
 
 const formSchema = z.object({
@@ -42,6 +36,7 @@ const formSchema = z.object({
     .min(2, "Title must be at least 2 characters.")
     .max(100, "Title must be at most 100 characters."),
   company_id: z.string().min(1, "Company must be selected."),
+  category_id: z.string().min(1, "Category must be selected."),
   description: z
     .string()
     .min(20, "Description must be at least 20 characters.")
@@ -67,10 +62,18 @@ interface selectedJobProps {
   salaryMin: number | null;
   salaryMax: number | null;
   company_id: string;
+  category_id: string | undefined;
   companies_data:
     | {
         id: string;
         name: string;
+      }[]
+    | null;
+  categories_data:
+    | {
+        id: string;
+        name: string;
+        slug: string;
       }[]
     | null;
 }
@@ -79,25 +82,35 @@ interface CompanyProps {
   name: string;
 }
 [];
+interface CategoryProps {
+  id: string;
+  name: string;
+  slug: string;
+}
 const JobActions = ({
   isOpen,
   setIsOpen,
   company_data,
+  category_data,
   selectedJob,
 }: {
   isOpen: boolean;
   setIsOpen: (open: boolean) => void;
   company_data?: CompanyProps[];
+  category_data?: CategoryProps[];
   selectedJob?: selectedJobProps;
 }) => {
   const isEditMode = selectedJob?.id;
   const companies = isEditMode ? selectedJob?.companies_data : company_data;
+  const categories = isEditMode ? selectedJob?.categories_data : category_data;
+
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       job_title: "",
       company_id: "",
+      category_id: "",
       location: "",
       experienceLevel: "",
       type: "",
@@ -115,6 +128,7 @@ const JobActions = ({
         job_title: selectedJob.job_title,
         company_id: selectedJob.company_id,
         location: selectedJob.location || "",
+        category_id: selectedJob.category_id || "",
         experienceLevel: selectedJob.experienceLevel,
         type: selectedJob.type,
         status: selectedJob.status,
@@ -187,7 +201,16 @@ const JobActions = ({
     }
   }
   return (
-    <ActionDialog open={isOpen} setOpen={setIsOpen}>
+    <ActionDialog
+      open={isOpen}
+      setOpen={setIsOpen}
+      main_title={isEditMode ? "Edit Job" : "Create Job"}
+      description={
+        isEditMode
+          ? "Update the job details and click update"
+          : "Fill in the details of the new job and click create"
+      }
+    >
       <form id="job-form" onSubmit={form.handleSubmit(onSubmit)}>
         <FieldGroup>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -274,6 +297,38 @@ const JobActions = ({
             />
 
             <Controller
+              name="category_id"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid} className="w-full">
+                  <FieldLabel>Category</FieldLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    disabled={
+                      isEditMode
+                        ? updateMutation.isPending
+                        : createMutation.isPending
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Choose category" />
+                    </SelectTrigger>
+                    <SelectContent className="overflow-y-auto max-h-50">
+                      <SelectGroup>
+                        {categories?.map((category: CategoryProps) => (
+                          <SelectItem key={category.id} value={category.id}>
+                            {category.name}
+                          </SelectItem>
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </Field>
+              )}
+            />
+
+            <Controller
               name="experienceLevel"
               control={form.control}
               render={({ field, fieldState }) => (
@@ -325,35 +380,6 @@ const JobActions = ({
                       <SelectGroup>
                         <SelectItem value="FULL_TIME">Full Time</SelectItem>
                         <SelectItem value="PART_TIME">Part Time</SelectItem>
-                      </SelectGroup>
-                    </SelectContent>
-                  </Select>
-                </Field>
-              )}
-            />
-
-            <Controller
-              name="status"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid} className="w-full">
-                  <FieldLabel>Status</FieldLabel>
-                  <Select
-                    onValueChange={field.onChange}
-                    value={field.value}
-                    disabled={
-                      isEditMode
-                        ? updateMutation.isPending
-                        : createMutation.isPending
-                    }
-                  >
-                    <SelectTrigger>
-                      <SelectValue placeholder="Choose status" />
-                    </SelectTrigger>
-                    <SelectContent className="overflow-y-auto max-h-50">
-                      <SelectGroup>
-                        <SelectItem value="ACTIVE">Active</SelectItem>
-                        <SelectItem value="CLOSED">Closed</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
@@ -421,6 +447,34 @@ const JobActions = ({
               )}
             />
 
+            <Controller
+              name="status"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid} className="w-full">
+                  <FieldLabel>Status</FieldLabel>
+                  <Select
+                    onValueChange={field.onChange}
+                    value={field.value}
+                    disabled={
+                      isEditMode
+                        ? updateMutation.isPending
+                        : createMutation.isPending
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Choose status" />
+                    </SelectTrigger>
+                    <SelectContent className="overflow-y-auto max-h-50">
+                      <SelectGroup>
+                        <SelectItem value="ACTIVE">Active</SelectItem>
+                        <SelectItem value="CLOSED">Closed</SelectItem>
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </Field>
+              )}
+            />
             <Controller
               name="description"
               control={form.control}

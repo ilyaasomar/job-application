@@ -6,38 +6,8 @@ import { Field, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useQuery } from "@tanstack/react-query";
-import { is } from "date-fns/locale";
 import React from "react";
-const categories = [
-  {
-    id: 1,
-    name: "Engineering",
-  },
-  {
-    id: 2,
-    name: "Design",
-  },
-  {
-    id: 3,
-    name: "Marketing",
-  },
-  {
-    id: 4,
-    name: "Sales",
-  },
-  {
-    id: 5,
-    name: "Finance",
-  },
-  {
-    id: 6,
-    name: "Human Resources",
-  },
-  {
-    id: 7,
-    name: "Customer Service",
-  },
-];
+
 const JobsPage = () => {
   const [searchedTerm, setSearchedTerm] = React.useState("");
   const [isJuniorActive, setIsJuniorActive] = React.useState(false);
@@ -82,17 +52,15 @@ const JobsPage = () => {
     }
   };
 
-  // user useffect to log the changes in the filters
-  // React.useEffect(() => {
-  //   const getData = async () => {
-  //     const response = await fetch(
-  //       `/api/jobs?search=${filteredJobs.searchedTerm}&category=${filteredJobs.category}&level=${filteredJobs.level}`,
-  //     );
-  //     const data = await response.json();
-  //     console.log(data);
-  //   };
-  //   getData();
-  // }, [isJuniorActive, isMidActive, isSeniorActive, searchedTerm]);
+  // get categories data from the API
+  const { data: categories } = useQuery({
+    queryKey: ["categories"],
+    queryFn: async () => {
+      const response = await fetch(`/api/categories`);
+      const data = await response.json();
+      return data;
+    },
+  });
 
   // get data from the API
   const { data, isFetching } = useQuery({
@@ -131,7 +99,7 @@ const JobsPage = () => {
                 orientation="horizontal"
                 className="flex flex-col items-start"
               >
-                {categories.map((category) => (
+                {categories?.map((category: any) => (
                   <div
                     key={category.id}
                     className="space-x-2 flex items-center"

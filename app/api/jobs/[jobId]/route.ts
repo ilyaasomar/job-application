@@ -15,6 +15,7 @@ export const GET = async (
       },
       include: {
         company: true,
+        category: true,
       },
     });
     if (!job) {
@@ -38,6 +39,7 @@ export const PATCH = async (
   const {
     job_title,
     company_id,
+    category_id,
     location,
     experienceLevel,
     type,
@@ -91,6 +93,7 @@ export const PATCH = async (
         salaryMin: salaryMin,
         salaryMax: salaryMax,
         companyId: company_id,
+        categoryId: category_id,
         postedById: userId || "",
       },
     });

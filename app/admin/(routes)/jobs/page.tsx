@@ -11,10 +11,16 @@ const JobsPage = async () => {
     },
     include: {
       company: true,
+      category: true,
     },
     orderBy: { createdAt: "desc" },
   });
   const company = await prisma.company.findMany({
+    where: {
+      userId: userId,
+    },
+  });
+  const categories = await prisma.category.findMany({
     where: {
       userId: userId,
     },
@@ -25,6 +31,8 @@ const JobsPage = async () => {
     job_title: job.title,
     company_id: job.company.id,
     company_name: job.company.name,
+    category_id: job.category?.id,
+    category_name: job.category?.name,
     slug: job.slug,
     description: job.description,
     type: job.type,
@@ -34,11 +42,16 @@ const JobsPage = async () => {
     salaryMin: job.salaryMin,
     salaryMax: job.salaryMax,
     companies_data: company,
+    categories_data: categories,
   }));
 
   return (
     <div className="py-4 px-1">
-      <ShowJobData jobs={formattedJobs} company_data={company} />
+      <ShowJobData
+        jobs={formattedJobs}
+        company_data={company}
+        category_data={categories}
+      />
     </div>
   );
 };

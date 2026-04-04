@@ -188,7 +188,16 @@ const CompanyActions = ({
     }
   }
   return (
-    <ActionDialog open={isOpen} setOpen={setIsOpen}>
+    <ActionDialog
+      open={isOpen}
+      setOpen={setIsOpen}
+      main_title={isEditMode ? "Edit Company" : "Create Company"}
+      description={
+        isEditMode
+          ? "Update the company details and click update"
+          : "Fill in the details of the new company and click create"
+      }
+    >
       <form id="company-form" onSubmit={form.handleSubmit(onSubmit)}>
         <FieldGroup>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -285,9 +294,11 @@ const CompanyActions = ({
                   <Select
                     onValueChange={field.onChange}
                     value={field.value}
-                    disabled={ isEditMode
+                    disabled={
+                      isEditMode
                         ? updateMutation.isPending
-                        : createMutation.isPending}
+                        : createMutation.isPending
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Choose Industry" />
@@ -323,9 +334,11 @@ const CompanyActions = ({
                       rows={6}
                       className="min-h-24 resize-none"
                       aria-invalid={fieldState.invalid}
-                      disabled={ isEditMode
-                        ? updateMutation.isPending
-                        : createMutation.isPending}
+                      disabled={
+                        isEditMode
+                          ? updateMutation.isPending
+                          : createMutation.isPending
+                      }
                     />
                     <InputGroupAddon align="block-end">
                       <InputGroupText className="tabular-nums">

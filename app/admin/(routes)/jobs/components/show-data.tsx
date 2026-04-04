@@ -26,6 +26,15 @@ interface JobProps {
         name: string;
       }[]
     | null;
+  category_id: string | undefined;
+  category_name: string | undefined;
+  categories_data:
+    | {
+        id: string;
+        name: string;
+        slug: string;
+      }[]
+    | null;
 }
 [];
 
@@ -33,12 +42,19 @@ interface CompanyProps {
   id: string;
   name: string;
 }
+interface CategoryProps {
+  id: string;
+  name: string;
+  slug: string;
+}
 const ShowJobData = ({
   jobs,
   company_data,
+  category_data,
 }: {
   jobs: JobProps[];
   company_data: CompanyProps[];
+  category_data: CategoryProps[];
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   return (
@@ -59,6 +75,7 @@ const ShowJobData = ({
           isOpen={isOpen}
           setIsOpen={setIsOpen}
           company_data={company_data}
+          category_data={category_data}
         />
         <DataTable columns={columns} data={jobs} />
       </div>

@@ -3,15 +3,14 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { styles } from "@/app/styles";
-import { Award, CreditCard, Map, Package, SwissFranc } from "lucide-react";
+import { Award, CreditCard, Layers2, Map, Package } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-const JobDetailsPage = ({ params }) => {
+import { Spinner } from "@/components/ui/spinner";
+import { SpinnerCustom } from "@/components/admin/reusables/spinner";
+const JobDetailsPage = ({ params }: { params: Promise<{ jobId: string }> }) => {
   const { jobId } = React.use(params);
   // get data from the API
-
-  console.log(jobId);
-
   const { data, isFetching } = useQuery({
     queryKey: ["jobs", jobId],
     queryFn: async () => {
@@ -35,6 +34,10 @@ const JobDetailsPage = ({ params }) => {
       : data?.salaryMax >= 1000000
         ? `CHF ${data?.salaryMax / 1000000}M`
         : `CHF ${data?.salaryMax}`;
+
+  if (isFetching) {
+    return <SpinnerCustom />;
+  }
   return (
     <div className="w-full flex items-start gap-x-6">
       {/* left section */}
@@ -68,12 +71,12 @@ const JobDetailsPage = ({ params }) => {
       {/* RIGHT SECTION */}
       <div className="w-1/4 flex flex-col items-start space-y-5 mt-20 mr-2">
         {/* top section */}
-        <Button className={`${styles.primaryBgColor}`}>
+        <Button className={`${styles.primaryBgColor} `}>
           Apply for this job
         </Button>
         <div className="flex flex-col items-start bg-gray-100 w-full rounded-md p-4">
           <h2 className="font-semibold text-lg mb-2">Job Details</h2>
-          <div className="flex flex-col items-start space-y-4">
+          <div className="flex flex-col items-start space-y-4 py-6">
             {/* salary */}
             <div className="flex items-center justify-center gap-2">
               <div className="w-10 h-10 bg-white flex items-center justify-center rounded-sm border">
@@ -94,6 +97,17 @@ const JobDetailsPage = ({ params }) => {
               <div className="flex flex-col items-start">
                 <p className="font-medium text-sm">Location</p>
                 <p className="font-semibold text-sm">{data?.location}</p>
+              </div>
+            </div>
+
+            {/* category */}
+            <div className="flex items-center justify-center gap-2">
+              <div className="w-10 h-10 bg-white flex items-center justify-center rounded-sm border">
+                <Layers2 className="text-[#4191F9] w-6 h-6 mr-1" />
+              </div>
+              <div className="flex flex-col items-start">
+                <p className="font-medium text-sm">Category</p>
+                <p className="font-semibold text-sm">{data?.category.name}</p>
               </div>
             </div>
 

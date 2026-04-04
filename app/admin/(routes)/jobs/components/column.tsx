@@ -2,10 +2,8 @@
 
 import { styles } from "@/app/styles";
 import { Badge } from "@/components/ui/badge";
-import { formatter } from "@/lib/utils";
 import { ColumnDef } from "@tanstack/react-table";
 import Actions from "./actions";
-import { Company } from "@/app/generated/prisma/client";
 import { Button } from "@/components/ui/button";
 import { ArrowUpDown } from "lucide-react";
 type JobsColumn = {
@@ -25,6 +23,15 @@ type JobsColumn = {
     | {
         id: string;
         name: string;
+      }[]
+    | null;
+  category_id: string | undefined;
+  category_name: string | undefined;
+  categories_data:
+    | {
+        id: string;
+        name: string;
+        slug: string;
       }[]
     | null;
 };
@@ -109,7 +116,11 @@ export const columns: ColumnDef<JobsColumn>[] = [
           salaryMin: row.original.salaryMin,
           salaryMax: row.original.salaryMax,
           company_id: row.original.company_id,
+          company_name: row.original.company_name,
           companies_data: row.original.companies_data,
+          category_id: row.original.category_id,
+          category_name: row.original.category_name,
+          categories_data: row.original.categories_data,
         }}
       />
     ),

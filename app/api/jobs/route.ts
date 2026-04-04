@@ -19,22 +19,25 @@ export const GET = async (req: NextRequest) => {
           : "";
 
   try {
-    const categories = category ? category.split(",") : [];
+    const categories = category ? category.split(",") : undefined;
+    // check if the filter exisit
+
     const jobs = await prisma.job.findMany({
       where: {
         title: {
           contains: search || undefined,
           mode: "insensitive",
         },
-        // categoryId: {
-        //   in: categories,
-        // },
+        categoryId: {
+          in: categories,
+        },
         experienceLevel: {
           equals: (level as "JUNIOR" | "MID" | "SENIOR") || null || undefined,
         },
       },
       include: {
         company: true,
+        category: true,
       },
       orderBy: {
         createdAt: "desc",
@@ -53,6 +56,7 @@ export const POST = async (req: NextRequest) => {
   const {
     job_title,
     company_id,
+    category_id,
     location,
     experienceLevel,
     type,
@@ -90,6 +94,7 @@ export const POST = async (req: NextRequest) => {
         salaryMin: salaryMin,
         salaryMax: salaryMax,
         companyId: company_id,
+        categoryId: category_id,
         postedById: userId || "",
       },
     });

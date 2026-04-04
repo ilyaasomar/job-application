@@ -8,17 +8,23 @@ import {
 interface ActionDialogProps {
   open: boolean;
   setOpen: (open: boolean) => void;
+  main_title?: string;
+  description?: string;
   children: React.ReactNode;
 }
-export function ActionDialog({ open, setOpen, children }: ActionDialogProps) {
+export function ActionDialog({
+  open,
+  setOpen,
+  main_title,
+  description,
+  children,
+}: ActionDialogProps) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogContent className="sm:max-w-3xl">
         <DialogHeader>
-          <DialogTitle>Scrollable Content</DialogTitle>
-          <DialogDescription>
-            This is a dialog with scrollable content.
-          </DialogDescription>
+          <DialogTitle>{main_title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
         <div className="-mx-4 no-scrollbar max-h-[80vh] overflow-y-auto px-4">
           {children}

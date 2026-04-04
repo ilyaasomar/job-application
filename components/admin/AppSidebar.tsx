@@ -2,11 +2,12 @@
 import {
   Home,
   Inbox,
-  Search,
   User2,
   ChevronUp,
   DollarSign,
   User,
+  Layers2,
+  FileUser,
 } from "lucide-react";
 import {
   Sidebar,
@@ -57,6 +58,13 @@ const AppSidebar = () => {
     },
     {
       id: 3,
+      title: "Categories",
+      url: "/admin/categories",
+      icon: Layers2,
+      isActive: pathname.startsWith("/admin/categories"),
+    },
+    {
+      id: 4,
       title: "Jobs",
       url: "/admin/jobs",
       icon: DollarSign,
@@ -64,14 +72,14 @@ const AppSidebar = () => {
     },
 
     {
-      id: 4,
+      id: 5,
       title: "Applications",
       url: "/admin/applications",
-      icon: Search,
+      icon: FileUser,
       isActive: pathname.startsWith("/admin/applications"),
     },
     {
-      id: 5,
+      id: 6,
       title: "Applicants",
       url: "/admin/applicants",
       icon: User,
@@ -101,8 +109,8 @@ const AppSidebar = () => {
                     asChild
                     className={cn(
                       route.isActive
-                        ? `${styles.primaryBgColor} text-white hover:${styles.primaryBgColor} hover:text-white focus:${styles.primaryBgColor} focus:text-white active:${styles.primaryBgColor} active:text-white data-[state=open]:${styles.primaryBgColor} data-[state=open]:text-white`
-                        : `hover:${styles.primaryBgColor}`,
+                        ? `${styles.primaryBgColor} text-white hover:${styles.primaryBgColor} hover:text-white focus:${styles.primaryBgColor} focus:text-white active:${styles.primaryBgColor} active:text-white data-[state=open]:${styles.primaryBgColor} data-[state=open]:text-white rounded-[3.5px]`
+                        : `hover:${styles.primaryBgColor} rounded-[3.5px]`,
                     )}
                   >
                     <Link

@@ -2,11 +2,13 @@
 import { styles } from "@/app/styles";
 import DeleteDialog from "@/components/admin/reusables/delete-dialog";
 import { useMutation } from "@tanstack/react-query";
-import { Pencil, Trash } from "lucide-react";
+import { Eye, List, Pencil, Trash } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { toast } from "sonner";
 import JobActions from "./job-actions";
+import { set } from "zod";
+import { ShowJobDialog } from "./show-data-dialog";
 interface ActionProps {
   id: string;
   selectedJob: {
@@ -20,10 +22,20 @@ interface ActionProps {
     salaryMin: number | null;
     salaryMax: number | null;
     company_id: string;
+    company_name: string;
     companies_data:
       | {
           id: string;
           name: string;
+        }[]
+      | null;
+    category_id: string | undefined;
+    category_name: string | undefined;
+    categories_data:
+      | {
+          id: string;
+          name: string;
+          slug: string;
         }[]
       | null;
   };
@@ -32,6 +44,7 @@ interface ActionProps {
 const Actions = ({ id, selectedJob }: ActionProps) => {
   const [open, setOpen] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [isViewOpen, setIsViewOpen] = useState(false);
   const router = useRouter();
   //   delete mutation
   const deleteMutation = useMutation({
@@ -59,6 +72,30 @@ const Actions = ({ id, selectedJob }: ActionProps) => {
   });
   return (
     <div>
+      {/* view dialog */}
+
+      <ShowJobDialog
+        open={isViewOpen}
+        setOpen={setIsViewOpen}
+        main_title="Job Details"
+        description="View job details"
+        selectedJob={{
+          id: selectedJob.id,
+          job_title: selectedJob.job_title,
+          company_id: selectedJob.company_id,
+          company_name: selectedJob.company_name,
+          category_id: selectedJob.category_id,
+          category_name: selectedJob.category_name,
+          location: selectedJob.location,
+          type: selectedJob.type,
+          experienceLevel: selectedJob.experienceLevel,
+          status: selectedJob.status,
+          salaryMin: selectedJob.salaryMin,
+          salaryMax: selectedJob.salaryMax,
+          description: selectedJob.description,
+        }}
+      />
+
       {/* delete dialog */}
       <DeleteDialog
         open={open}
@@ -81,11 +118,19 @@ const Actions = ({ id, selectedJob }: ActionProps) => {
           salaryMax: selectedJob.salaryMax,
           company_id: selectedJob.company_id,
           companies_data: selectedJob?.companies_data,
+          category_id: selectedJob.category_id,
+          categories_data: selectedJob?.categories_data,
         }}
       />
 
       {/* buttons */}
       <div className="flex items-center gap-x-3">
+        <button
+          className={`w-8 h-8 ${styles.secondaryBgColor} text-white rounded-md flex items-center justify-center cursor-pointer`}
+          onClick={() => setIsViewOpen(true)}
+        >
+          <Eye className="w-4 h-4" />
+        </button>
         <button
           className={`w-8 h-8 ${styles.primaryBgColor} text-white rounded-md flex items-center justify-center cursor-pointer`}
           onClick={() => setIsOpen(true)}
