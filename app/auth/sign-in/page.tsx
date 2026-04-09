@@ -27,7 +27,7 @@ import { FcGoogle } from "react-icons/fc";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { getSession, signIn } from "next-auth/react";
 
 const formSchema = z.object({
   email: z.string().email("Please enter a valid email address."),
@@ -66,7 +66,13 @@ const SignIn = () => {
         );
       } else if (res?.ok) {
         toast.success("Signed in successfully!");
-        router.push("/admin");
+        const session = await getSession();
+        // @ts-ignore
+        if (session?.user?.role === "EMPLOYER") {
+          router.push("/admin");
+        } else {
+          router.push("/");
+        }
         router.refresh();
       }
     } catch (error) {

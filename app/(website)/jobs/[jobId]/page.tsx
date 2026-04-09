@@ -8,8 +8,12 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { Spinner } from "@/components/ui/spinner";
 import { SpinnerCustom } from "@/components/admin/reusables/spinner";
+import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 const JobDetailsPage = ({ params }: { params: Promise<{ jobId: string }> }) => {
   const { jobId } = React.use(params);
+  const session = useSession();
+  const router = useRouter();
   // get data from the API
   const { data, isFetching } = useQuery({
     queryKey: ["jobs", jobId],
@@ -21,19 +25,24 @@ const JobDetailsPage = ({ params }: { params: Promise<{ jobId: string }> }) => {
   });
 
   //   if the minimum salary is greater then 10,000 i need to short it 10k or 100k and add k at the end of it
-  const formattedMinimumSalary =
-    data?.salaryMin >= 10000
-      ? `CHF ${data?.salaryMin / 1000}k`
-      : data?.salaryMin >= 1000000
-        ? `CHF ${data?.salaryMin / 1000000}M`
-        : `CHF ${data?.salaryMin}`;
+  const formatSalary = (amount: number | undefined) => {
+    if (!amount) return "N/A";
+    if (amount >= 1000000) return `CHF ${(amount / 1000000).toFixed(1)}M`;
+    if (amount >= 1000) return `CHF ${Math.floor(amount / 1000)}k`;
+    return `CHF ${amount}`;
+  };
 
-  const formattedMaximumSalary =
-    data?.salaryMax >= 10000
-      ? `CHF ${data?.salaryMax / 1000}k`
-      : data?.salaryMax >= 1000000
-        ? `CHF ${data?.salaryMax / 1000000}M`
-        : `CHF ${data?.salaryMax}`;
+  const formattedMinimumSalary = formatSalary(data?.salaryMin);
+  const formattedMaximumSalary = formatSalary(data?.salaryMax);
+
+  // handle apply
+  const handleApply = () => {
+    if (session.status === "unauthenticated") {
+      router.push("/auth/sign-in");
+    } else {
+      router.push(`/jobs/${jobId}/apply`);
+    }
+  };
 
   if (isFetching) {
     return <SpinnerCustom />;
@@ -71,9 +80,14 @@ const JobDetailsPage = ({ params }: { params: Promise<{ jobId: string }> }) => {
       {/* RIGHT SECTION */}
       <div className="w-1/4 flex flex-col items-start space-y-5 mt-20 mr-2">
         {/* top section */}
-        <Button className={`${styles.primaryBgColor} `}>
-          Apply for this job
-        </Button>
+        <div className="flex justify-end w-full">
+          <Button
+            className={`${styles.primaryBgColor} hover:${styles.primaryBgColor} text-white py-5 rounded-sm cursor-pointer`}
+            onClick={handleApply}
+          >
+            Apply for this job
+          </Button>
+        </div>
         <div className="flex flex-col items-start bg-gray-100 w-full rounded-md p-4">
           <h2 className="font-semibold text-lg mb-2">Job Details</h2>
           <div className="flex flex-col items-start space-y-4 py-6">

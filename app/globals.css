@@ -122,7 +122,10 @@
   * {
     @apply border-border outline-ring/50;
   }
-  html,
+  html {
+    scrollbar-gutter: stable;
+  }
+
   body {
     width: 100%;
     overflow-x: hidden;

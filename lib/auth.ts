@@ -3,7 +3,7 @@ import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import bcrypt from "bcryptjs";
 import prisma from "./prisma";
-import { User } from "@/app/generated/prisma/client";
+import { Role, User } from "@/app/generated/prisma/client";
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Google({
@@ -102,7 +102,8 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.id = token.id as string;
         session.user.name = token.name as string;
         session.user.email = token.email as string;
-        // session.user.role = token.role as Role;
+        // @ts-ignore
+        session.user.role = token.role as Role;
       }
       return session;
     },
