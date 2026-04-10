@@ -7,7 +7,6 @@ export const GET = async (
   { params }: { params: Promise<{ jobId: string }> },
 ) => {
   const { jobId } = await params;
-  console.log(jobId);
   try {
     const job = await prisma.job.findUnique({
       where: {
@@ -16,6 +15,7 @@ export const GET = async (
       include: {
         company: true,
         category: true,
+        applications: true,
       },
     });
     if (!job) {
