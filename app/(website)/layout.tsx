@@ -1,5 +1,5 @@
-import Navbar from "@/components/navbar";
 import { TanstackProvider } from "./query-provider";
+import Navbar from "@/components/navbar";
 
 export default function WebsiteLayout({
   children,

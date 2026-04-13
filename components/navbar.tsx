@@ -34,7 +34,11 @@ const Navbar = () => {
           <Logo />
           <div className="space-x-6">
             {navbarLinks.map((link) => (
-              <Link key={link.name} href={link.href}>
+              <Link
+                key={link.name}
+                href={link.href}
+                className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+              >
                 {session.data?.user
                   ? link.name
                   : link.name !== "Dashboard" && link.name}
@@ -71,7 +75,9 @@ const Navbar = () => {
               </DropdownMenu>
             ) : (
               <Button
-                className={`${styles.primaryBgColor} hover:${styles.primaryBgColor} text-white cursor-pointer`}
+                variant="outline"
+                size="sm"
+                className={`cursor-pointer`}
                 onClick={() => router.push("/auth/sign-in")}
               >
                 Sign In
