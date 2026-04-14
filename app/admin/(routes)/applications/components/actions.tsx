@@ -14,6 +14,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import { ShowApplicationDialog } from "./application-dialog";
+import ApplicationActions from "./application-actions";
 interface ActionProps {
   id: string;
   jobId: string;
@@ -22,6 +24,8 @@ interface ActionProps {
   applicant_name: string;
   email: string;
   job_title: string;
+  salaryMin: number | null;
+  salaryMax: number | null;
   company_name: string;
   resumeUrl: string;
   coverLetter: string | null;
@@ -68,31 +72,33 @@ const Actions = ({ id, ...props }: ActionProps) => {
         onConfirm={() => deleteMutation.mutate("id")}
         isLoading={deleteMutation.isPending}
       />
-      {/* <CategoryActions
+      <ApplicationActions
         isOpen={isOpen}
         setIsOpen={setIsOpen}
-        selectedCategory={{
+        selectedApplication={{
           id,
-          category_name,
-          slug,
+          status: props.status,
         }}
-      /> */}
+      />
 
-      {/* buttons */}
-      {/* <div className="flex items-center gap-x-3">
-        <button
-          className={`w-8 h-8 ${styles.primaryBgColor} text-white rounded-md flex items-center justify-center cursor-pointer`}
-          onClick={() => setIsOpen(true)}
-        >
-          <Pencil className="w-4 h-4" />
-        </button>
-        <button
-          className={`w-8 h-8 bg-red-600 text-white rounded-md flex items-center justify-center cursor-pointer`}
-          onClick={() => setOpen(true)}
-        >
-          <Trash className="w-4 h-4" />
-        </button>
-      </div> */}
+      <ShowApplicationDialog
+        open={isViewOpen}
+        setOpen={setIsViewOpen}
+        main_title="Application Information"
+        description="This is the description of the application that came from one of the applicants"
+        selectedApplication={{
+          applicant_name: props.applicant_name,
+          email: props.email,
+          job_title: props.job_title,
+          salaryMin: props.salaryMin,
+          salaryMax: props.salaryMax,
+          company_name: props.company_name,
+          resumeUrl: props.resumeUrl,
+          coverLetter: props.coverLetter,
+          status: props.status,
+          notes: props.notes,
+        }}
+      />
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

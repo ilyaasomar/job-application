@@ -24,7 +24,8 @@ export default function DashboardClientPage({ applications }: any) {
 
   const appliedJobs = applications.length;
   const pendingJobs = applications.filter(
-    (application: any) => application.status === "REVIEWING" || "APPLIED",
+    (application: any) =>
+      application.status === "REVIEWING" || application.status === "APPLIED",
   );
   const acceptedJobs = applications.filter(
     (application: any) => application.status === "OFFERED",
@@ -131,8 +132,6 @@ export default function DashboardClientPage({ applications }: any) {
                 </div>
               </CardContent>
             </Card>
-
-          
           </div>
 
           {/* Right Content - Applications */}

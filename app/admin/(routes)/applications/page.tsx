@@ -32,6 +32,8 @@ const ApplicationPage = async () => {
     applicant_name: application.applicant.name,
     email: application.applicant.email,
     job_title: application.job.title,
+    salaryMin: application.job.salaryMin,
+    salaryMax: application.job.salaryMax,
     company_name: application.job.company.name,
     resumeUrl: application.resumeUrl,
     coverLetter: application.coverLetter,

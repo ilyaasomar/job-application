@@ -2,6 +2,49 @@ import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { UTApi } from "uploadthing/server";
 const utapi = new UTApi();
+
+// update an application
+export const PATCH = async (
+  request: NextRequest,
+  { params }: { params: Promise<{ applicationId: string }> },
+) => {
+  const { applicationId } = await params;
+  const { status } = await request.json();
+  try {
+    // check if the application already exists
+    const existApplication = await prisma.application.findUnique({
+      where: { id: applicationId },
+    });
+    if (!existApplication) {
+      return NextResponse.json(
+        { message: "Application not found" },
+        { status: 404 },
+      );
+    }
+    // update the application
+    const updatedApplication = await prisma.application.update({
+      where: { id: applicationId },
+      data: {
+        status: status,
+      },
+    });
+    return NextResponse.json({
+      message: "Application updated successfully!",
+      data: updatedApplication,
+    });
+  } catch (error) {
+    console.error("Error updating application:", error);
+    return NextResponse.json(
+      {
+        message: "Failed to update application",
+        error: (error as Error).message,
+      },
+      { status: 500 },
+    );
+  }
+};
+
+// delete an application
 export const DELETE = async (
   request: NextRequest,
   { params }: { params: Promise<{ applicationId: string }> },

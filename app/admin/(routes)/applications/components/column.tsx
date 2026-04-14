@@ -12,6 +12,8 @@ export type ApplicationColumn = {
   applicant_name: string;
   email: string;
   job_title: string;
+  salaryMin: number | null;
+  salaryMax: number | null;
   company_name: string;
   resumeUrl: string;
   coverLetter: string | null;
@@ -56,6 +58,8 @@ export const columns: ColumnDef<ApplicationColumn>[] = [
         applicant_name={row.original.applicant_name}
         email={row.original.email}
         job_title={row.original.job_title}
+        salaryMin={row.original.salaryMin}
+        salaryMax={row.original.salaryMax}
         company_name={row.original.company_name}
         resumeUrl={row.original.resumeUrl}
         coverLetter={row.original.coverLetter}

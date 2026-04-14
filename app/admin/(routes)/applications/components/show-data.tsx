@@ -17,6 +17,8 @@ interface ShowApplicationDataProps {
     applicant_name: string;
     email: string;
     job_title: string;
+    salaryMin: number | null;
+    salaryMax: number | null;
     company_name: string;
     resumeUrl: string;
     coverLetter: string | null;
@@ -31,13 +33,13 @@ const ShowApplicationData = ({ applications }: ShowApplicationDataProps) => {
     <div className="p-3">
       <div className="flex justify-between border-b pb-2">
         <Header title="Applications" />
-        <Button
+        {/* <Button
           className={`${styles.primaryBgColor} text-white py-5 rounded-sm hover:${styles.primaryBgColor} cursor-pointer`}
           onClick={() => setIsOpen(true)}
         >
           <Plus className="w-5 h-5 text-white" />
           Add Application
-        </Button>
+        </Button> */}
       </div>
       {/* show data */}
       <div className="mt-6">
