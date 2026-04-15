@@ -69,7 +69,7 @@ const Actions = ({ id, ...props }: ActionProps) => {
       <DeleteDialog
         open={open}
         setOpen={setOpen}
-        onConfirm={() => deleteMutation.mutate("id")}
+        onConfirm={() => deleteMutation.mutate(id)}
         isLoading={deleteMutation.isPending}
       />
       <ApplicationActions

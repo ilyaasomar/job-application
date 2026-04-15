@@ -74,11 +74,11 @@ const Register = () => {
       });
 
       const result = await response.json();
-      console.log(result);
-      if (result.error) {
-        toast.error(result.error);
-      }
-      if (result.message) {
+      if (response.status === 400) {
+        toast.error(result.message);
+        setLoading(false);
+        router.push("/auth/sign-up");
+      } else {
         toast.success(result.message);
         setLoading(false);
         router.push("/auth/sign-in");

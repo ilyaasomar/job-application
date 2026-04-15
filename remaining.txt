@@ -1,0 +1,6 @@
+
+1. i have to solve when the seeker logged out the session still exist 
+in /dashboard so i have to send them to /.
+2. to add the feature the seeker also can update his profile picture.
+3. to build the admin dashboard.
+4. to organize and re-correct the website landing page.

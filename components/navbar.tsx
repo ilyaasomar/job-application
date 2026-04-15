@@ -27,6 +27,7 @@ const navbarLinks = [
 const Navbar = () => {
   const session = useSession();
   const router = useRouter();
+
   return (
     <nav className="w-full border-b pb-1">
       <div className="flex w-full max-w-300 mx-auto py-3">

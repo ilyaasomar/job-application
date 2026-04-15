@@ -29,13 +29,13 @@ const ShowApplicantData = ({
     <div className="p-3">
       <div className="flex justify-between border-b pb-2">
         <Header title="Applicants" />
-        <Button
+        {/* <Button
           className={`${styles.primaryBgColor} text-white py-5 rounded-sm hover:${styles.primaryBgColor} cursor-pointer`}
           onClick={() => setIsOpen(true)}
         >
           <Plus className="w-5 h-5 text-white" />
           Add Applicant
-        </Button>
+        </Button> */}
       </div>
       {/* show data */}
       <div className="mt-6">

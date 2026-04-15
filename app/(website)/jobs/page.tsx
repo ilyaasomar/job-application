@@ -1,4 +1,5 @@
 "use client";
+import { Footer } from "@/components/footer";
 import JobCardsList from "./card-lists";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -75,116 +76,120 @@ const JobsPage = () => {
   });
 
   return (
-    <div className="w-full flex">
-      {/* sidebar */}
-      <div className="bg-gray-50 w-1/4 h-full p-4 mt-3 rounded-md ">
-        {/* form that handles all these filters */}
-        <div className="mb-4 flex flex-col items-start gap-y-2">
-          <h2 className="font-semibold text-black">Refine Search</h2>
-          <Input
-            placeholder="Search for jobs..."
-            className="mb-4"
-            value={searchedTerm}
-            onChange={(e) => setSearchedTerm(e.target.value)}
-          />
-        </div>
+    <>
+      <div className="w-full flex mb-10">
+        {/* sidebar */}
+        <div className="bg-gray-50 w-1/4 h-full p-4 mt-3 rounded-md ">
+          {/* form that handles all these filters */}
+          <div className="mb-4 flex flex-col items-start gap-y-2">
+            <h2 className="font-semibold text-black">Refine Search</h2>
+            <Input
+              placeholder="Search for jobs..."
+              className="mb-4"
+              value={searchedTerm}
+              onChange={(e) => setSearchedTerm(e.target.value)}
+            />
+          </div>
 
-        {/* filter by category */}
-        <div className="mb-4 flex flex-col items-start gap-y-2">
-          <h3 className="font-medium text-gray-700">Filter by category</h3>
-          {/*  */}
-          <div className="mt-2">
-            <FieldGroup className="mx-auto w-56">
-              <Field
-                orientation="horizontal"
-                className="flex flex-col items-start"
+          {/* filter by category */}
+          <div className="mb-4 flex flex-col items-start gap-y-2">
+            <h3 className="font-medium text-gray-700">Filter by category</h3>
+            {/*  */}
+            <div className="mt-2">
+              <FieldGroup className="mx-auto w-56">
+                <Field
+                  orientation="horizontal"
+                  className="flex flex-col items-start"
+                >
+                  {categories?.map((category: any) => (
+                    <div
+                      key={category.id}
+                      className="space-x-2 flex items-center"
+                    >
+                      <Checkbox
+                        id={`category-${category.id}`}
+                        name={`category-${category.id}`}
+                        className="w-5 h-5 bg-white border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
+                        value={category.id}
+                        onCheckedChange={() =>
+                          setSelectedCategories((prev) => {
+                            return prev.includes(category.id)
+                              ? prev.filter((id) => id !== category.id)
+                              : [...prev, category.id];
+                          })
+                        }
+                      />
+                      <FieldLabel htmlFor={`category-${category.id}`}>
+                        {category.name}
+                      </FieldLabel>
+                    </div>
+                  ))}
+                </Field>
+              </FieldGroup>
+            </div>
+          </div>
+
+          {/* filter by levels */}
+          <div className="mb-4 flex flex-col items-start gap-y-2 mt-6">
+            <h3 className="font-medium text-gray-700">Filter by level</h3>
+            <div
+              className={cn(
+                `mt-2 grid grid-cols-1 lg:grid-cols-3 gap-3 cursor-pointer`,
+              )}
+            >
+              <Button
+                variant="outline"
+                size="sm"
+                className={cn(
+                  `rounded-md cursor-pointer`,
+                  isJuniorActive
+                    ? "bg-blue-500 hover:bg-blue-500 text-white hover:text-white"
+                    : "bg-white text-gray-700",
+                )}
+                onClick={() => handleChange("junior", !isJuniorActive)}
               >
-                {categories?.map((category: any) => (
-                  <div
-                    key={category.id}
-                    className="space-x-2 flex items-center"
-                  >
-                    <Checkbox
-                      id={`category-${category.id}`}
-                      name={`category-${category.id}`}
-                      className="w-5 h-5 bg-white border-gray-300 rounded focus:ring-2 focus:ring-blue-500 focus:ring-offset-0 disabled:cursor-not-allowed disabled:opacity-50"
-                      value={category.id}
-                      onCheckedChange={() =>
-                        setSelectedCategories((prev) => {
-                          return prev.includes(category.id)
-                            ? prev.filter((id) => id !== category.id)
-                            : [...prev, category.id];
-                        })
-                      }
-                    />
-                    <FieldLabel htmlFor={`category-${category.id}`}>
-                      {category.name}
-                    </FieldLabel>
-                  </div>
-                ))}
-              </Field>
-            </FieldGroup>
+                Junior
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className={cn(
+                  `rounded-md cursor-pointer`,
+                  isMidActive
+                    ? "bg-blue-500 hover:bg-blue-500 text-white hover:text-white"
+                    : "bg-white text-gray-700",
+                )}
+                onClick={() => handleChange("mid", !isMidActive)}
+              >
+                Mid
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className={cn(
+                  `rounded-md cursor-pointer`,
+                  isSeniorActive
+                    ? "bg-blue-500 hover:bg-blue-500 text-white hover:text-white"
+                    : "bg-white text-gray-700",
+                )}
+                onClick={() => handleChange("senior", !isSeniorActive)}
+              >
+                Senior
+              </Button>
+            </div>
           </div>
         </div>
 
-        {/* filter by levels */}
-        <div className="mb-4 flex flex-col items-start gap-y-2 mt-6">
-          <h3 className="font-medium text-gray-700">Filter by level</h3>
-          <div
-            className={cn(
-              `mt-2 grid grid-cols-1 lg:grid-cols-3 gap-3 cursor-pointer`,
-            )}
-          >
-            <Button
-              variant="outline"
-              size="sm"
-              className={cn(
-                `rounded-md cursor-pointer`,
-                isJuniorActive
-                  ? "bg-blue-500 hover:bg-blue-500 text-white hover:text-white"
-                  : "bg-white text-gray-700",
-              )}
-              onClick={() => handleChange("junior", !isJuniorActive)}
-            >
-              Junior
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className={cn(
-                `rounded-md cursor-pointer`,
-                isMidActive
-                  ? "bg-blue-500 hover:bg-blue-500 text-white hover:text-white"
-                  : "bg-white text-gray-700",
-              )}
-              onClick={() => handleChange("mid", !isMidActive)}
-            >
-              Mid
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              className={cn(
-                `rounded-md cursor-pointer`,
-                isSeniorActive
-                  ? "bg-blue-500 hover:bg-blue-500 text-white hover:text-white"
-                  : "bg-white text-gray-700",
-              )}
-              onClick={() => handleChange("senior", !isSeniorActive)}
-            >
-              Senior
-            </Button>
-          </div>
+        {/* middle content */}
+        <div className="w-3/4 p-4">
+          <h1 className="text-2xl font-bold mb-4">Available Jobs</h1>
+          <p>Show {data && data.length} available jobs</p>
+          <JobCardsList jobs={data ?? []} loading={isFetching || !data} />
         </div>
       </div>
 
-      {/* middle content */}
-      <div className="w-3/4 p-4">
-        <h1 className="text-2xl font-bold mb-4">Available Jobs</h1>
-        <p>Show {data && data.length} available jobs</p>
-        <JobCardsList jobs={data ?? []} loading={isFetching || !data} />
-      </div>
-    </div>
+      <Footer />
+    </>
   );
 };
 

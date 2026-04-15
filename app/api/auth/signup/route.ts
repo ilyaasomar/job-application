@@ -4,9 +4,22 @@ import { NextRequest, NextResponse } from "next/server";
 
 export const POST = async (req: NextRequest) => {
   const body = await req.json();
-  console.log(body);
+
   try {
     const hashPassword = await bcrypt.hash(body.password, 10);
+    // check if the user already exists
+    const existUser = await prisma.user.findUnique({
+      where: {
+        email: body.email,
+      },
+    });
+    if (existUser)
+      return NextResponse.json(
+        {
+          message: "User already exists",
+        },
+        { status: 400 },
+      );
     const userData = await prisma.user.create({
       data: {
         name: body.name,

@@ -67,12 +67,12 @@ const Actions = ({ id, selectedApplicant }: ActionProps) => {
 
       {/* buttons */}
       <div className="flex items-center gap-x-3">
-        <button
+        {/* <button
           className={`w-8 h-8 ${styles.primaryBgColor} text-white rounded-md flex items-center justify-center cursor-pointer`}
           onClick={() => setIsOpen(true)}
         >
           <Pencil className="w-4 h-4" />
-        </button>
+        </button> */}
         <button
           className={`w-8 h-8 bg-red-600 text-white rounded-md flex items-center justify-center cursor-pointer`}
           onClick={() => setOpen(true)}

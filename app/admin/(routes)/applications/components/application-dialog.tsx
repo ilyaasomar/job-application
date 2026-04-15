@@ -84,14 +84,36 @@ export function ShowApplicationDialog({
               </TableRow>
               <TableRow>
                 <TableCell className="font-semibold">Resume</TableCell>
-                <TableCell>{selectedApplication.resumeUrl}</TableCell>
+                <TableCell>
+                  {/* {selectedApplication.resumeUrl} */}
+                  <a
+                    href={selectedApplication.resumeUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline flex items-center gap-2"
+                  >
+                    View Resume
+                  </a>
+                </TableCell>
               </TableRow>
               <TableRow>
                 <TableCell className="font-semibold">Cover Letter</TableCell>
                 <TableCell>
-                  <Badge variant="secondary" className="capitalize">
-                    {selectedApplication.coverLetter}
-                  </Badge>
+                  {/* {selectedApplication.coverLetter} */}
+                  {selectedApplication.coverLetter ? (
+                    <a
+                      href={selectedApplication.coverLetter}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline"
+                    >
+                      View Cover Letter
+                    </a>
+                  ) : (
+                    <span className="text-muted-foreground italic">
+                      No cover letter provided
+                    </span>
+                  )}
                 </TableCell>
               </TableRow>
               <TableRow>
