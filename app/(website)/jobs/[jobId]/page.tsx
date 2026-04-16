@@ -33,8 +33,6 @@ const JobDetailsPage = ({ params }: { params: Promise<{ jobId: string }> }) => {
   });
   const applicantId = data?.applications[0]?.applicantId ?? "";
 
-  console.log(applicantId);
-
   //   if the minimum salary is greater then 10,000 i need to short it 10k or 100k and add k at the end of it
   const formatSalary = (amount: number | undefined) => {
     if (!amount) return "N/A";

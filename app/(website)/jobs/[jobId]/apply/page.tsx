@@ -83,17 +83,19 @@ const ApplyPage = () => {
 
   const createMutation = useMutation({
     mutationFn: async (payload: any) => {
-      const response = await fetch(`/api/jobs/${jobId}/apply`, {
+      const response = await fetch(`/api/applications`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
       });
+      console.log(response);
       const data = await response.json();
       return data;
     },
     onSuccess: (data) => {
+      console.log(data);
       form.reset();
       toast.success(data.message);
       router.push(`/jobs/${jobId}`);
@@ -101,6 +103,7 @@ const ApplyPage = () => {
       queryClient.invalidateQueries({ queryKey: ["jobs"] });
     },
     onError: (error) => {
+      console.log(error);
       toast.error(error.message);
     },
   });

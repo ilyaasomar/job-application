@@ -18,8 +18,10 @@ import { toast } from "sonner";
 import { Footer } from "@/components/footer";
 import React from "react";
 import { useUploadThing } from "@/lib/uploadthing";
+import ProfileInfo from "./profile-info";
 
 export default function DashboardClientPage({ applications }: any) {
+  const [open, setOpen] = React.useState(false);
   const { data: session, update } = useSession();
   const user = session?.user;
   // console.log(user);
@@ -244,7 +246,23 @@ export default function DashboardClientPage({ applications }: any) {
 
                   {/* Action Buttons */}
                   <div className="w-full space-y-3">
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                    <ProfileInfo
+                      open={open}
+                      setOpen={setOpen}
+                      user={
+                        user
+                          ? {
+                              id: user.id ?? "",
+                              name: user.name ?? "",
+                              email: user.email ?? "",
+                            }
+                          : undefined
+                      }
+                    />
+                    <Button
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                      onClick={() => setOpen(true)}
+                    >
                       <Pencil className="w-4 h-4 mr-2" />
                       Edit Profile
                     </Button>

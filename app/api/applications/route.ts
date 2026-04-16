@@ -4,8 +4,18 @@ import { NextRequest, NextResponse } from "next/server";
 export const POST = async (req: NextRequest) => {
   const { jobId, applicantId, resumeUrl, coverLetter, notes } =
     await req.json();
-  console.log(jobId, applicantId, resumeUrl, coverLetter, notes);
   try {
+    // check if the application already exists
+    const existApplication = await prisma.application.findFirst({
+      where: { jobId: jobId, applicantId: applicantId },
+    });
+    if (existApplication) {
+      return NextResponse.json(
+        { message: "Application already exists" },
+        { status: 400 },
+      );
+    }
+
     const application = await prisma.application.create({
       data: {
         jobId: jobId,
