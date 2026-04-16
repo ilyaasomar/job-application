@@ -8,6 +8,8 @@ export const PATCH = async (
 ) => {
   const { applicantId } = await params;
   const { name, email, password, avatarUrl, role } = await request.json();
+
+  console.log(avatarUrl);
   try {
     // check if user exists
     const existUser = await prisma.user.findUnique({
@@ -28,7 +30,7 @@ export const PATCH = async (
         name,
         email,
         password: hashedPassword,
-        avatarUrl,
+        image: avatarUrl,
         role,
       },
     });

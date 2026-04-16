@@ -145,14 +145,14 @@ const ApplicationActions = ({
     <ActionDialog
       open={isOpen}
       setOpen={setIsOpen}
-      main_title={isEditMode ? "Update Category" : "Create Category"}
+      main_title={isEditMode ? "Update Application" : "Create Application"}
       description={
         isEditMode
-          ? "Update the category details and click update"
-          : "Fill in the details of the new category and click create"
+          ? "Update the application details and click update"
+          : "Fill in the details of the new application and click create"
       }
     >
-      <form id="category-form" onSubmit={form.handleSubmit(onSubmit)}>
+      <form id="application-form" onSubmit={form.handleSubmit(onSubmit)}>
         <FieldGroup>
           <Controller
             name="status"
@@ -198,7 +198,7 @@ const ApplicationActions = ({
             </Button>
             <Button
               type="submit"
-              form="category-form"
+              form="application-form"
               className={`cursor-pointer ${styles.primaryBgColor} hover:${styles.primaryBgColor}`}
               disabled={
                 isEditMode

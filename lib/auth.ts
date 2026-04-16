@@ -80,12 +80,17 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
 
       return true;
     },
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, trigger, account, session }) {
       if (user) {
         token.id = user.id;
         token.name = user.name;
         token.email = user.email;
+        token.image = user.image;
         token.role = (user as User).role;
+      }
+      // this updates the data in the session every time user get update
+      if (trigger === "update" && session?.user?.image) {
+        token.image = session.user.image;
       }
       // ✅ For Google, role may not be on the user object — fetch from DB
       if (account?.provider === "google" && token.email && !token.role) {
@@ -102,6 +107,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         session.user.id = token.id as string;
         session.user.name = token.name as string;
         session.user.email = token.email as string;
+        session.user.image = token.image as string;
         // @ts-ignore
         session.user.role = token.role as Role;
       }

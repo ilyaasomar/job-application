@@ -10,19 +10,89 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Pencil, MoreHorizontal, Compass } from "lucide-react";
+import { Pencil, MoreHorizontal, Compass, Loader2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { Footer } from "@/components/footer";
+import React from "react";
+import { useUploadThing } from "@/lib/uploadthing";
 
 export default function DashboardClientPage({ applications }: any) {
-  const session = useSession();
-  const user = session.data?.user;
+  const { data: session, update } = useSession();
+  const user = session?.user;
+  // console.log(user);
   const router = useRouter();
   const queryClient = useQueryClient();
+  const fileInputRef = React.useRef<HTMLInputElement>(null);
+  const [preview, setPreview] = React.useState<string | null>(null);
+  const { startUpload, isUploading } = useUploadThing("avatar");
 
+  // belongs to image change
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = () => {
+      setPreview(reader.result as string);
+    };
+    reader.readAsDataURL(file);
+  };
+
+  // image mutation
+  const imageMutation = useMutation({
+    mutationFn: async (payload: any) => {
+      const response = await fetch(`/api/users/${user?.id}`, {
+        method: "PATCH",
+        body: JSON.stringify(payload),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message);
+      return data;
+    },
+    onSuccess: async (data) => {
+      const newImageUrl = data.data.image;
+      await update({
+        user: {
+          ...session?.user,
+          image: newImageUrl,
+        },
+      });
+
+      toast.success("Syncing session...");
+      toast.success(data.message);
+
+      // Give the cookie a moment to write, then refresh the server data
+      setTimeout(() => {
+        router.refresh();
+      }, 100);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+  const handleSave = async () => {
+    if (!preview) return;
+    const file = fileInputRef.current?.files?.[0];
+    if (!file) return;
+    // console.log(file);
+
+    // const uploadProfile = await startUpload([file]);
+    const uploadProfile = await startUpload([file]);
+    if (!uploadProfile?.[0]?.url) {
+      console.error("Upload failed");
+      return;
+    }
+
+    const payload = {
+      avatarUrl: uploadProfile[0].url,
+    };
+
+    imageMutation.mutate(payload);
+  };
+
+  // other data
   const appliedJobs = applications.length;
   const pendingJobs = applications.filter(
     (application: any) =>
@@ -80,16 +150,63 @@ export default function DashboardClientPage({ applications }: any) {
                 <CardContent className="flex flex-col items-center text-center">
                   {/* Profile Avatar with Online Indicator */}
                   <div className="relative mb-4">
-                    <Avatar className="w-28 h-28">
-                      <AvatarImage
-                        src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/application-dashboard-screen-bkU4V2qiLEqZXw3wPiomWUvZuYZSjC.png"
-                        alt="Julian Archi-tect"
+                    <div
+                      className="relative mb-4 cursor-pointer group"
+                      onClick={() => fileInputRef.current?.click()}
+                      aria-disabled={isUploading || imageMutation.isPending}
+                    >
+                      {/* Hidden file input */}
+                      <input
+                        type="file"
+                        accept="image/*"
+                        ref={fileInputRef}
+                        onChange={handleFileChange}
+                        className="hidden"
+                        disabled={isUploading || imageMutation.isPending}
                       />
-                      <AvatarFallback className="text-2xl bg-orange-100 text-orange-800">
-                        JA
-                      </AvatarFallback>
-                    </Avatar>
-                    <span className="absolute bottom-1 right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full"></span>
+
+                      <Avatar className="w-28 h-28">
+                        <AvatarImage
+                          src={
+                            preview ??
+                            user?.image ??
+                            "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/application-dashboard-screen-bkU4V2qiLEqZXw3wPiomWUvZuYZSjC.png"
+                          }
+                          alt="Julian Archi-tect"
+                        />
+                        <AvatarFallback className="text-2xl bg-orange-100 text-orange-800">
+                          JA
+                        </AvatarFallback>
+                      </Avatar>
+
+                      {/* Hover overlay so user knows it's clickable */}
+                      <div className="absolute inset-0 bg-black/40 rounded-full opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <Pencil className="w-5 h-5 text-white" />
+                      </div>
+                    </div>
+
+                    {/* Show Save button only when a new image is selected */}
+                    {preview && (
+                      <Button
+                        className="mb-4 bg-blue-600 hover:bg-blue-700 text-white"
+                        onClick={handleSave}
+                        disabled={isUploading || imageMutation.isPending}
+                      >
+                        {isUploading ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            Uploading...
+                          </>
+                        ) : imageMutation?.isPending ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            Updating...
+                          </>
+                        ) : (
+                          "Save Photo"
+                        )}
+                      </Button>
+                    )}
                   </div>
 
                   <h2 className="text-xl font-semibold text-slate-900 mb-1">
