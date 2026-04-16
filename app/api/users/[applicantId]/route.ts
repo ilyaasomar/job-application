@@ -1,7 +1,8 @@
 import prisma from "@/lib/prisma";
 import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
-
+import { UTApi } from "uploadthing/server";
+const utapi = new UTApi();
 export const PATCH = async (
   request: NextRequest,
   { params }: { params: Promise<{ applicantId: string }> },
@@ -20,6 +21,12 @@ export const PATCH = async (
         { message: "User does not exist" },
         { status: 400 },
       );
+    }
+    // check if the posted image and stored image are same or not
+    if (avatarUrl !== existUser.image) {
+      // delete the image from uploadthing
+      const oldImageKey = existUser?.image?.split("/f/")[1];
+      await utapi.deleteFiles(oldImageKey as string);
     }
     const hashedPassword = password
       ? await bcrypt.hash(password, 10)
