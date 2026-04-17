@@ -16,7 +16,8 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { LogOut, Settings, User } from "lucide-react";
+import { LogOut, Settings, User2, User2Icon } from "lucide-react";
+import { User } from "next-auth";
 
 const navbarLinks = [
   { name: "Home", href: "/" },
@@ -24,9 +25,12 @@ const navbarLinks = [
   // { name: "Companies", href: "/companies" },
   { name: "Dashboard", href: "/dashboard" },
 ];
+interface ExtendedUser extends User {
+  role?: string;
+}
 const Navbar = () => {
-  const { data: session, update } = useSession();
-  const user = session?.user;
+  const { data: session } = useSession();
+  const user: ExtendedUser | undefined = session?.user;
   const router = useRouter();
 
   return (
@@ -41,16 +45,18 @@ const Navbar = () => {
                 href={link.href}
                 className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               >
-                {user ? link.name : link.name !== "Dashboard" && link.name}
+                {user && user.role === "SEEKER"
+                  ? link.name
+                  : link.name !== "Dashboard" && link.name}
               </Link>
             ))}
           </div>
           {/* user profile */}
           <div className="flex items-center">
-            {user ? (
+            {user && user?.role === "SEEKER" ? (
               <DropdownMenu>
                 <h2 className="text-muted-foreground font-semibold mr-2">
-                  {user.name}
+                  {user && user.role === "SEEKER" && user.name}
                 </h2>
                 <DropdownMenuTrigger className="border rounded-md">
                   <Avatar>
@@ -68,7 +74,7 @@ const Navbar = () => {
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={() => router.push("/dashboard")}>
-                    <User className="h-[1.2rem] w-[1.2rem] mr-2" /> Profile
+                    <User2Icon className="h-[1.2rem] w-[1.2rem] mr-2" /> Profile
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     variant="destructive"
