@@ -172,12 +172,12 @@ export default function DashboardClientPage({ applications }: any) {
                           src={
                             preview ??
                             user?.image ??
-                            "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/application-dashboard-screen-bkU4V2qiLEqZXw3wPiomWUvZuYZSjC.png"
+                            "https://github.com/shadcn.png"
                           }
-                          alt="Julian Archi-tect"
+                          alt="Ilyas Omar"
                         />
                         <AvatarFallback className="text-2xl bg-orange-100 text-orange-800">
-                          JA
+                          IO
                         </AvatarFallback>
                       </Avatar>
 

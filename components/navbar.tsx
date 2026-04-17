@@ -25,7 +25,8 @@ const navbarLinks = [
   { name: "Dashboard", href: "/dashboard" },
 ];
 const Navbar = () => {
-  const session = useSession();
+  const { data: session, update } = useSession();
+  const user = session?.user;
   const router = useRouter();
 
   return (
@@ -40,30 +41,34 @@ const Navbar = () => {
                 href={link.href}
                 className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
               >
-                {session.data?.user
-                  ? link.name
-                  : link.name !== "Dashboard" && link.name}
+                {user ? link.name : link.name !== "Dashboard" && link.name}
               </Link>
             ))}
           </div>
           {/* user profile */}
           <div className="flex items-center">
-            {session.data?.user ? (
+            {user ? (
               <DropdownMenu>
-                <DropdownMenuTrigger>
+                <h2 className="text-muted-foreground font-semibold mr-2">
+                  {user.name}
+                </h2>
+                <DropdownMenuTrigger className="border rounded-md">
                   <Avatar>
-                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarImage
+                      src={
+                        user
+                          ? (user.image as string)
+                          : "https://github.com/shadcn.png"
+                      }
+                    />
                     <AvatarFallback>CN</AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent sideOffset={10}>
                   <DropdownMenuLabel>My Account</DropdownMenuLabel>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => router.push("/dashboard")}>
                     <User className="h-[1.2rem] w-[1.2rem] mr-2" /> Profile
-                  </DropdownMenuItem>
-                  <DropdownMenuItem>
-                    <Settings className="h-[1.2rem] w-[1.2rem] mr-2" /> Settings
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     variant="destructive"

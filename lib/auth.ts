@@ -92,6 +92,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (trigger === "update" && session?.user?.image) {
         token.image = session.user.image;
       }
+      if (trigger === "update" && session?.name) {
+        token.name = session.name;
+      }
+      if (trigger === "update" && session?.email) {
+        token.email = session.email;
+      }
       // ✅ For Google, role may not be on the user object — fetch from DB
       if (account?.provider === "google" && token.email && !token.role) {
         const dbUser = await prisma.user.findUnique({

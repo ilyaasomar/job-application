@@ -8,7 +8,8 @@ export const PATCH = async (
   { params }: { params: Promise<{ applicantId: string }> },
 ) => {
   const { applicantId } = await params;
-  const { name, email, password, avatarUrl, role } = await request.json();
+  const { name, email, oldPassword, password, avatarUrl, role } =
+    await request.json();
 
   console.log(avatarUrl);
   try {
@@ -23,22 +24,42 @@ export const PATCH = async (
       );
     }
     // check if the posted image and stored image are same or not
-    if (avatarUrl !== existUser.image) {
-      // delete the image from uploadthing
+    if (avatarUrl && avatarUrl !== existUser.image) {
       const oldImageKey = existUser?.image?.split("/f/")[1];
-      await utapi.deleteFiles(oldImageKey as string);
+
+      // Only delete if it's actually an uploadthing image
+      if (oldImageKey) {
+        await utapi.deleteFiles(oldImageKey);
+      }
     }
-    const hashedPassword = password
-      ? await bcrypt.hash(password, 10)
-      : existUser.password; // if password is provided, hash it, otherwise keep existing password
+    // check if the old password is correct
+    if (oldPassword) {
+      const isOldPasswordCorrect = await bcrypt.compare(
+        oldPassword,
+        existUser?.password as string,
+      );
+      if (!isOldPasswordCorrect) {
+        return NextResponse.json(
+          { message: "Old password is incorrect" },
+          { status: 400 },
+        );
+      }
+    }
+
+    const hashedPassword =
+      password && password.length > 0
+        ? await bcrypt.hash(password, 10)
+        : existUser.password; // ← keep existing if not sent
+
     const user = await prisma.user.update({
       where: { id: applicantId },
       data: {
-        name,
-        email,
-        password: hashedPassword,
-        image: avatarUrl,
-        role,
+        // i only update fields that were actually sent
+        ...(name && { name }),
+        ...(email && { email }),
+        ...(avatarUrl && { image: avatarUrl }),
+        ...(role && { role }),
+        ...(password && password.length > 0 && { password: hashedPassword }),
       },
     });
     return NextResponse.json({

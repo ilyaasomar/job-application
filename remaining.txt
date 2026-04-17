@@ -1,3 +1,2 @@
-2. seeker information update.
 3. to build the admin dashboard.
 4. to organize and re-correct the website landing page.
