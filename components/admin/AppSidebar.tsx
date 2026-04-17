@@ -135,11 +135,11 @@ const AppSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <SidebarMenu className="bg-[#0B121A] text-white hover:bg-[#0B121A] rounded-md py-1">
+        <SidebarMenu className="bg-[#0559D2]/90 text-white hover:bg-[#0559D2]/90 rounded-md py-1">
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton className="hover:bg-[#0B121A] text-white hover:text-white cursor-pointer active:bg-[#0B121A] data-[state=open]:bg-[#0B121A] active:text-white data-[state=open]:text-white">
+                <SidebarMenuButton className="hover:bg-[#0559D2]/90 text-white hover:text-white cursor-pointer active:bg-[#0559D2]/90 data-[state=open]:bg-[#0559D2]/90 active:text-white data-[state=open]:text-white">
                   <User2 />
                   <span className="font-semibold text-md text-white hover:text-white ">
                     {session.data?.user?.name}

@@ -34,6 +34,7 @@ export const GET = async (req: NextRequest) => {
         experienceLevel: {
           equals: (level as "JUNIOR" | "MID" | "SENIOR") || null || undefined,
         },
+        status: "ACTIVE",
       },
       include: {
         company: true,

@@ -37,7 +37,7 @@ const JobDetailsPage = ({ params }: { params: Promise<{ jobId: string }> }) => {
   const formatSalary = (amount: number | undefined) => {
     if (!amount) return "N/A";
     if (amount >= 1000000) return `CHF ${(amount / 1000000).toFixed(1)}M`;
-    if (amount >= 1000) return `CHF ${Math.floor(amount / 1000)}k`;
+    if (amount >= 1000) return `CHF ${(amount / 1000).toFixed(2)}K`;
     return `CHF ${amount}`;
   };
 
