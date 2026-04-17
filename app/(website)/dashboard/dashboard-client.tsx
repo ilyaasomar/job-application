@@ -61,8 +61,6 @@ export default function DashboardClientPage({ applications }: any) {
           image: newImageUrl,
         },
       });
-
-      toast.success("Syncing session...");
       toast.success(data.message);
 
       // Give the cookie a moment to write, then refresh the server data

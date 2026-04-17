@@ -13,10 +13,12 @@ import { Button } from "../ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { SidebarTrigger } from "../ui/sidebar";
 import { signOut, useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 const Navbar = () => {
   const { data: session } = useSession();
   const { theme, setTheme } = useTheme();
+  const router = useRouter();
   return (
     <nav className="px-6 py-4 flex items-center justify-between sticky top-0 bg-background z-10 border-b">
       {/* LEFT SIDE */}
@@ -53,18 +55,21 @@ const Navbar = () => {
         <DropdownMenu>
           <DropdownMenuTrigger>
             <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
+              <AvatarImage
+                src={
+                  session?.user
+                    ? (session.user.image as string)
+                    : "https://github.com/shadcn.png"
+                }
+              />
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent sideOffset={10}>
             <DropdownMenuLabel>My Account</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push("/admin/profile")}>
               <User className="h-[1.2rem] w-[1.2rem] mr-2" /> Profile
-            </DropdownMenuItem>
-            <DropdownMenuItem>
-              <Settings className="h-[1.2rem] w-[1.2rem] mr-2" /> Settings
             </DropdownMenuItem>
             <DropdownMenuItem variant="destructive" onClick={() => signOut()}>
               <LogOut className="h-[1.2rem] w-[1.2rem] mr-2" />

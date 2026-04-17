@@ -13,7 +13,7 @@ type ApplicantsColumn = {
   email: string;
   password: string | null;
   role: Role;
-  avatarUrl: string | null;
+  image: string | null;
   createdAt: string;
 };
 
@@ -45,11 +45,11 @@ export const columns: ColumnDef<ApplicantsColumn>[] = [
     header: "Role",
   },
   {
-    accessorKey: "avatarUrl",
-    header: "Avatar",
+    accessorKey: "image",
+    header: "Image",
     cell: ({ row }) => (
       <Image
-        src={row?.original?.avatarUrl || ""}
+        src={row?.original?.image || ""}
         width={40}
         height={40}
         alt="Avatar"
@@ -72,7 +72,7 @@ export const columns: ColumnDef<ApplicantsColumn>[] = [
           email: row.original.email,
           password: row.original.password,
           role: row.original.role,
-          avatarUrl: row.original.avatarUrl,
+          avatarUrl: row.original.image,
           createdAt: row.original.createdAt,
         }}
       />

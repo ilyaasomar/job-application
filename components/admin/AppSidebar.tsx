@@ -32,12 +32,13 @@ import {
 
 import { cn } from "@/lib/utils";
 import { styles } from "@/app/styles";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import { Logo, LogoIcon } from "./logo";
 
 const AppSidebar = () => {
   const session = useSession();
+  const router = useRouter();
 
   const { state } = useSidebar();
   const pathname = usePathname();
@@ -134,21 +135,22 @@ const AppSidebar = () => {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
-        <SidebarMenu className="bg-gray-200 rounded-md py-1">
+        <SidebarMenu className="bg-[#0B121A] text-white hover:bg-[#0B121A] rounded-md py-1">
           <SidebarMenuItem>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <SidebarMenuButton className="hover:bg-gray-200 cursor-pointer">
+                <SidebarMenuButton className="hover:bg-[#0B121A] text-white hover:text-white cursor-pointer active:bg-[#0B121A] data-[state=open]:bg-[#0B121A] active:text-white data-[state=open]:text-white">
                   <User2 />
-                  <span className="font-semibold text-md">
+                  <span className="font-semibold text-md text-white hover:text-white ">
                     {session.data?.user?.name}
                   </span>
-                  <ChevronUp className="ml-auto" />
+                  <ChevronUp className="ml-auto text-white hover:text-white" />
                 </SidebarMenuButton>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end">
-                <DropdownMenuItem>Account</DropdownMenuItem>
-                <DropdownMenuItem>Setting</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => router.push("/admin/profile")}>
+                  Profile
+                </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => signOut()}>
                   Sign out
                 </DropdownMenuItem>

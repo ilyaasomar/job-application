@@ -11,7 +11,6 @@ export const PATCH = async (
   const { name, email, oldPassword, password, avatarUrl, role } =
     await request.json();
 
-  console.log(avatarUrl);
   try {
     // check if user exists
     const existUser = await prisma.user.findUnique({
@@ -40,7 +39,7 @@ export const PATCH = async (
       );
       if (!isOldPasswordCorrect) {
         return NextResponse.json(
-          { message: "Old password is incorrect" },
+          { message: "Incorrect Old password incorrect" },
           { status: 400 },
         );
       }
@@ -63,7 +62,7 @@ export const PATCH = async (
       },
     });
     return NextResponse.json({
-      message: "User updated successfully!",
+      message: "User data updated successfully!",
       data: user,
     });
   } catch (error) {

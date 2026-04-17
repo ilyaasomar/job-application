@@ -130,8 +130,6 @@ const ProfileInfo = ({ open, setOpen, user }: ProfileInfoProps) => {
       console.log(data);
       const newData = data.data;
       await update({ name: newData.name, email: newData.email });
-
-      toast.success("Syncing session...");
       toast.success(data.message);
       setOpen(false);
 
@@ -154,7 +152,6 @@ const ProfileInfo = ({ open, setOpen, user }: ProfileInfoProps) => {
       confirmPassword: data.confirmPassword,
     };
     updateMutation.mutate(payload);
-    console.log(payload);
   };
   return (
     <ActionDialog

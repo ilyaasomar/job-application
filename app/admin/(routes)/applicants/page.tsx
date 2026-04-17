@@ -26,7 +26,7 @@ const ApplicantsPage = async () => {
       email: applicant.email,
       password: applicant.password,
       role: applicant.role,
-      avatarUrl: applicant.avatarUrl,
+      image: applicant.image,
       createdAt: registeredDate,
     };
   });

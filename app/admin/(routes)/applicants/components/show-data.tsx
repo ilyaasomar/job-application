@@ -15,7 +15,7 @@ interface ApplicantsProps {
   email: string;
   password: string | null;
   role: Role;
-  avatarUrl: string | null;
+  image: string | null;
   createdAt: string;
 }
 [];

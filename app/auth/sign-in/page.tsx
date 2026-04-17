@@ -165,7 +165,7 @@ const SignIn = () => {
               <div className="flex-1 h-px bg-gray-300 dark:bg-gray-700" />
             </div>
             {/* --- Google & GitHub Buttons --- */}
-            <div className="grid grid-cols-2 gap-x-3 ">
+            <div className="grid grid-cols-1">
               <Button
                 type="button"
                 variant="outline"
@@ -175,17 +175,6 @@ const SignIn = () => {
               >
                 <FcGoogle size={20} className="h-5 w-5 text-red-500" />
                 Google
-              </Button>
-
-              <Button
-                type="button"
-                variant="outline"
-                className="w-full flex items-center justify-center gap-x-2"
-                onClick={() => signIn("github")}
-                disabled={loading}
-              >
-                <Github className="h-4 w-4" />
-                GitHub
               </Button>
             </div>
           </form>

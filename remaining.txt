@@ -1,4 +1,4 @@
-1. inside admin applicant image must reveal.
+
 2. employer user must have profile that he can change his profile data and image
 3. to build the admin dashboard.
 4. to organize and re-correct the website landing page.
