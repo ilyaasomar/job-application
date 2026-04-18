@@ -16,49 +16,41 @@ const categories = [
   {
     icon: Compass,
     name: "Architecture",
-    jobs: 1240,
     color: "bg-blue-50 text-blue-600",
   },
   {
     icon: PenTool,
     name: "Interior Design",
-    jobs: 856,
     color: "bg-rose-50 text-rose-600",
   },
   {
     icon: Building,
     name: "Urban Planning",
-    jobs: 432,
     color: "bg-amber-50 text-amber-600",
   },
   {
     icon: Leaf,
     name: "Sustainability",
-    jobs: 318,
     color: "bg-emerald-50 text-emerald-600",
   },
   {
     icon: Layers,
     name: "BIM & CAD",
-    jobs: 567,
     color: "bg-violet-50 text-violet-600",
   },
   {
     icon: Home,
     name: "Residential",
-    jobs: 723,
     color: "bg-sky-50 text-sky-600",
   },
   {
     icon: Monitor,
     name: "Visualization",
-    jobs: 289,
     color: "bg-pink-50 text-pink-600",
   },
   {
     icon: Ruler,
     name: "Project Management",
-    jobs: 445,
     color: "bg-orange-50 text-orange-600",
   },
 ];
@@ -107,8 +99,8 @@ export function CategoriesSection() {
                   <h3 className="font-semibold text-foreground mb-1 group-hover:text-primary transition-colors">
                     {category.name}
                   </h3>
-                  <p className="text-sm text-muted-foreground">
-                    {category.jobs.toLocaleString()} jobs
+                  <p className="text-sm text-muted-foreground flex items-center gap-1 group-hover:text-primary/80 transition-colors">
+                    Explore jobs <ArrowRight className="w-3 h-3" />
                   </p>
                 </CardContent>
               </Card>

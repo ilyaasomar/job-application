@@ -19,12 +19,10 @@ export function CTASection() {
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
         <div className="max-w-3xl mx-auto text-center">
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 text-balance">
-            Ready to Shape the Future of Design?
+            Ready to Get Started?
           </h2>
           <p className="text-lg md:text-xl text-white/80 mb-10 max-w-2xl mx-auto text-pretty">
-            Whether you&apos;re looking for your next career move or searching
-            for exceptional talent, The Curator connects you with the best in
-            architecture and design.
+            Create an account today to start applying for jobs, or register as an employer to post your open roles.
           </p>
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -33,7 +31,7 @@ export function CTASection() {
               className="bg-white text-primary hover:bg-white/90 h-12 px-8"
               asChild
             >
-              <Link href="/register">
+              <Link href="/auth/sign-up">
                 Get Started Free
                 <ArrowRight className="w-4 h-4 ml-2" />
               </Link>
@@ -44,7 +42,7 @@ export function CTASection() {
               className="border-white/30 text-white hover:bg-white/10 h-12 px-8 bg-transparent"
               asChild
             >
-              <Link href="/post-job">Post a Job</Link>
+              <Link href="/auth/sign-in">Post a Job</Link>
             </Button>
           </div>
 

@@ -6,18 +6,15 @@ const footerLinks = {
     title: "For Job Seekers",
     links: [
       { label: "Browse Jobs", href: "/jobs" },
-      { label: "Salary Guide", href: "/salaries" },
-      { label: "Career Advice", href: "/advice" },
-      { label: "Resume Tips", href: "/resume-tips" },
+      { label: "Create Profile", href: "/auth/sign-up" },
+      { label: "Dashboard", href: "/dashboard" },
     ],
   },
   forEmployers: {
     title: "For Employers",
     links: [
-      { label: "Post a Job", href: "/post-job" },
-      { label: "Pricing", href: "/pricing" },
-      { label: "Talent Search", href: "/talent" },
-      { label: "Employer Resources", href: "/resources" },
+      { label: "Post a Job", href: "/auth/sign-in" },
+      { label: "Employer Dashboard", href: "/dashboard" },
     ],
   },
   company: {
@@ -25,8 +22,6 @@ const footerLinks = {
     links: [
       { label: "About Us", href: "/about" },
       { label: "Contact", href: "/contact" },
-      { label: "Press", href: "/press" },
-      { label: "Careers", href: "/careers" },
     ],
   },
   legal: {
@@ -34,8 +29,6 @@ const footerLinks = {
     links: [
       { label: "Privacy Policy", href: "/privacy" },
       { label: "Terms of Service", href: "/terms" },
-      { label: "Cookie Policy", href: "/cookies" },
-      { label: "Help Center", href: "/help" },
     ],
   },
 }
@@ -58,8 +51,7 @@ export function Footer() {
               <span className="text-2xl font-bold text-background">The Curator</span>
             </Link>
             <p className="text-background/70 text-sm leading-relaxed mb-6 max-w-xs">
-              The leading job platform for architecture and design professionals. 
-              Connecting talent with world-class firms since 2024.
+              A dedicated job platform connecting architecture and design professionals with promising new opportunities.
             </p>
             {/* Social Links */}
             <div className="flex gap-4">

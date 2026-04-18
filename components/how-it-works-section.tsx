@@ -4,26 +4,26 @@ const steps = [
   {
     step: "01",
     icon: UserPlus,
-    title: "Create Your Profile",
-    description: "Sign up and build your professional profile. Showcase your experience, skills, and upload your portfolio.",
+    title: "Create an Account",
+    description: "Sign up as a job seeker to get started. Set up your basic information to prepare for your applications.",
   },
   {
     step: "02",
     icon: FileSearch,
-    title: "Discover Opportunities",
-    description: "Browse curated job listings from top architecture and design firms. Filter by location, type, and experience level.",
+    title: "Browse Jobs",
+    description: "Search through available job listings. Filter by category, job type, and experience level to find a match.",
   },
   {
     step: "03",
     icon: Send,
-    title: "Apply with Ease",
-    description: "Submit applications with your portfolio and cover letter. Track your applications in real-time from your dashboard.",
+    title: "Apply Easily",
+    description: "Submit your application by providing a link to your resume and an optional cover letter.",
   },
   {
     step: "04",
     icon: CheckCircle,
-    title: "Land Your Dream Job",
-    description: "Connect directly with employers, ace your interviews, and start your next chapter in architecture.",
+    title: "Track Status",
+    description: "Monitor your applications from your dashboard as employers review and update your status.",
   },
 ]
 
@@ -35,10 +35,10 @@ export function HowItWorksSection() {
         <div className="text-center max-w-3xl mx-auto mb-16">
           <span className="text-sm font-semibold text-primary uppercase tracking-wider">How It Works</span>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mt-4 mb-6 text-balance">
-            Your Journey to Success
+            Your Application Journey
           </h2>
           <p className="text-lg text-muted-foreground text-pretty">
-            Getting started is simple. Follow these steps to find your perfect role in architecture and design.
+            Getting started is simple. Follow these straightforward steps to find and apply to open roles.
           </p>
         </div>
 

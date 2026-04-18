@@ -2,28 +2,28 @@ import { Building2, Users, Briefcase, Award } from "lucide-react";
 
 const stats = [
   {
+    icon: Users,
+    value: "100%",
+    label: "Free for Seekers",
+    description: "Apply without hidden fees",
+  },
+  {
     icon: Briefcase,
-    value: "12,000+",
-    label: "Active Job Listings",
-    description: "New opportunities daily",
+    value: "3",
+    label: "Experience Levels",
+    description: "Junior, Mid, and Senior roles",
   },
   {
     icon: Building2,
-    value: "3,500+",
-    label: "Top Firms",
-    description: "From boutique to global",
-  },
-  {
-    icon: Users,
-    value: "85,000+",
-    label: "Design Professionals",
-    description: "Growing community",
+    value: "2",
+    label: "Job Types",
+    description: "Full-Time and Part-Time options",
   },
   {
     icon: Award,
-    value: "94%",
-    label: "Satisfaction Rate",
-    description: "From placed candidates",
+    value: "1",
+    label: "Unified Dashboard",
+    description: "Manage applications easily",
   },
 ];
 

@@ -13,54 +13,54 @@ import {
 const seekerFeatures = [
   {
     icon: Search,
-    title: "Smart Job Matching",
+    title: "Job Filtering",
     description:
-      "Our AI analyzes your skills and experience to recommend the perfect opportunities at top firms.",
+      "Find the right opportunities by searching jobs by category, salary range, and experience level.",
   },
   {
     icon: FileText,
-    title: "Portfolio Showcase",
+    title: "Simple Applications",
     description:
-      "Create a stunning digital portfolio that highlights your best work and catches recruiters&apos; attention.",
+      "Apply to jobs quickly by submitting your resume link and a customized cover letter.",
   },
   {
     icon: Bell,
-    title: "Instant Alerts",
+    title: "Status Updates",
     description:
-      "Get notified immediately when new positions matching your criteria are posted.",
+      "Know exactly where you stand by seeing when your application moves to interviewing or offered.",
   },
   {
     icon: BarChart3,
     title: "Application Tracking",
     description:
-      "Monitor all your applications in one place with real-time status updates.",
+      "Monitor all your active and past applications in one unified view.",
   },
 ];
 
 const employerFeatures = [
   {
     icon: Building2,
-    title: "Company Branding",
+    title: "Company Profiles",
     description:
-      "Showcase your firm&apos;s culture, projects, and values to attract the right candidates.",
-  },
-  {
-    icon: Users,
-    title: "Talent Pipeline",
-    description:
-      "Build a pool of qualified candidates and manage applications with powerful tools.",
+      "Set up your company&apos;s profile with a logo and description to provide context to incoming applicants.",
   },
   {
     icon: Zap,
-    title: "Quick Posting",
+    title: "Job Posting",
     description:
-      "Create and publish job listings in minutes with our streamlined posting flow.",
+      "Create detailed job listings with specific requirements like experience level, job type, and salary range.",
+  },
+  {
+    icon: Users,
+    title: "Applicant Tracking",
+    description:
+      "Review incoming applications and keep track of who applied to which positions.",
   },
   {
     icon: CheckCircle2,
     title: "Candidate Management",
     description:
-      "Review applications, schedule interviews, and collaborate with your team seamlessly.",
+      "Update application statuses as candidates move through the hiring process and leave internal private notes.",
   },
 ];
 

@@ -34,7 +34,7 @@ const Navbar = () => {
   const router = useRouter();
 
   return (
-    <nav className="w-full border-b pb-1">
+    <nav className="sticky top-0 z-50 w-full border-b pb-1 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="flex w-full max-w-300 mx-auto py-3">
         <div className="flex justify-between items-center w-full">
           <Logo />

@@ -5,26 +5,26 @@ import { Star } from "lucide-react";
 const testimonials = [
   {
     name: "Sarah Chen",
-    role: "Senior Architect at Foster + Partners",
+    role: "Job Seeker",
     avatar: "SC",
     content:
-      "The Curator helped me land my dream job at one of the world&apos;s most prestigious firms. The platform&apos;s focus on architecture made all the difference.",
+      "The filtering options made it incredibly easy to find open roles in my specific category. I applied to several positions in just a few minutes.",
     rating: 5,
   },
   {
     name: "Marcus Rivera",
-    role: "Design Director at Gensler",
+    role: "Hiring Manager",
     avatar: "MR",
     content:
-      "As a hiring manager, I&apos;ve found exceptional talent through The Curator. The quality of candidates and the streamlined process saves us countless hours.",
+      "Posting jobs is straightforward, and the dashboard helps me keep track of incoming applicants easily without a cluttered interface.",
     rating: 5,
   },
   {
     name: "Emma Thompson",
-    role: "BIM Specialist at SOM",
+    role: "Job Seeker",
     avatar: "ET",
     content:
-      "The job matching is incredibly accurate. Within two weeks of creating my profile, I had three interview requests from top firms.",
+      "I love how everything is organized. I can see the exact status of my applications, and it takes the guessing game out of the job hunt.",
     rating: 5,
   },
 ];
@@ -39,11 +39,10 @@ export function TestimonialsSection() {
             Testimonials
           </span>
           <h2 className="text-3xl md:text-4xl font-bold text-foreground mt-4 mb-6 text-balance">
-            Loved by Professionals
+            Hear From Our Users
           </h2>
           <p className="text-lg text-muted-foreground text-pretty">
-            Join thousands of architects and designers who have found success
-            with The Curator.
+            Discover how The Curator helps job seekers and employers connect easily.
           </p>
         </div>
 
