@@ -18,6 +18,12 @@ const RegisteredCompanies = ({
 }: {
   companies: RegisteredCompanyProps[];
 }) => {
+  const organizeIndustry = (industry: string | null) => {
+    let firstLetter = industry?.charAt(0);
+    firstLetter = firstLetter?.toUpperCase();
+    let remainingLetters = industry?.slice(1);
+    return firstLetter + "" + remainingLetters;
+  };
   return (
     <Card className="h-fit border-none shadow-sm">
       <CardHeader className="flex flex-row items-center justify-between">
@@ -51,7 +57,8 @@ const RegisteredCompanies = ({
               <p
                 className={`text-xs flex items-center gap-1 ${styles.accentColor}`}
               >
-                <Building2 className="h-3 w-3" /> {company.industry}
+                <Building2 className="h-3 w-3" />{" "}
+                {organizeIndustry(company.industry)}
               </p>
               <p
                 className={`text-xs font-bold underline ${styles.primaryColor}`}

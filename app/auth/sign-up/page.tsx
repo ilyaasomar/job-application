@@ -25,6 +25,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { Loader2 } from "lucide-react";
 
 const formSchema = z
   .object({
@@ -100,7 +101,7 @@ const Register = () => {
         </CardHeader>
         <CardContent>
           <form id="signup-form" onSubmit={form.handleSubmit(onSubmit)}>
-            <FieldGroup>
+            <FieldGroup className="gap-2">
               <Controller
                 name="name"
                 control={form.control}
@@ -245,7 +246,14 @@ const Register = () => {
               className={`cursor-pointer ${styles.primaryBgColor} hover:${styles.primaryBgColor}`}
               disabled={loading}
             >
-              Sign Up
+              {loading ? (
+                <>
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span className="ml-2">Signing up...</span>
+                </>
+              ) : (
+                "Sign Up"
+              )}
             </Button>
           </Field>
         </CardFooter>

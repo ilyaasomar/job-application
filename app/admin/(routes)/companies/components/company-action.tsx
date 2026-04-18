@@ -289,7 +289,7 @@ const CompanyActions = ({
               name="industry"
               control={form.control}
               render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid} className="w-full">
+                <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Industry</FieldLabel>
                   <Select
                     onValueChange={field.onChange}
@@ -300,10 +300,13 @@ const CompanyActions = ({
                         : createMutation.isPending
                     }
                   >
-                    <SelectTrigger>
+                    <SelectTrigger className="w-full">
                       <SelectValue placeholder="Choose Industry" />
                     </SelectTrigger>
-                    <SelectContent className="overflow-y-auto max-h-50">
+                    <SelectContent
+                      position="popper"
+                      className="overflow-y-auto max-h-70"
+                    >
                       <SelectGroup>
                         {industries.map((industry) => (
                           <SelectItem

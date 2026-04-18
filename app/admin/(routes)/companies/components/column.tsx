@@ -43,6 +43,11 @@ export const columns: ColumnDef<CompanyColumn>[] = [
   {
     accessorKey: "industry",
     header: "Industry",
+    cell: ({ row }) => {
+      let startLetter = row?.original?.industry?.[0].toUpperCase();
+      let endLetter = row?.original?.industry?.slice(1);
+      return String(startLetter + "" + endLetter);
+    },
   },
   {
     accessorKey: "location",
