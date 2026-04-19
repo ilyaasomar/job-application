@@ -21,7 +21,7 @@ import { Button } from "@/components/ui/button";
 import { styles } from "@/app/styles";
 import { toast } from "sonner";
 import React from "react";
-import { Github, Loader2, Mail } from "lucide-react";
+import { Loader2, Mail } from "lucide-react";
 import { FcGoogle } from "react-icons/fc";
 
 import { cn } from "@/lib/utils";

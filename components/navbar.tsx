@@ -1,8 +1,6 @@
 "use client";
-import Image from "next/image";
 import Link from "next/link";
 import { Button } from "./ui/button";
-import { styles } from "@/app/styles";
 import { Logo } from "./logo";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
@@ -16,13 +14,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
-import { LogOut, Settings, User2, User2Icon } from "lucide-react";
+import { LogOut, User2Icon } from "lucide-react";
 import { User } from "next-auth";
 
 const navbarLinks = [
   { name: "Home", href: "/" },
   { name: "Browse Jobs", href: "/jobs" },
-  // { name: "Companies", href: "/companies" },
   { name: "Dashboard", href: "/dashboard" },
 ];
 interface ExtendedUser extends User {
@@ -95,14 +92,6 @@ const Navbar = () => {
                 Sign In
               </Button>
             )}
-
-            {/* <Image
-              src="/images/logo-icon.svg"
-              alt="user profile"
-              width={40}
-              height={40}
-              className="inline-block mr-2"
-            /> */}
           </div>
         </div>
       </div>

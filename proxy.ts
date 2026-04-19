@@ -13,7 +13,6 @@ export async function proxy(req: NextRequest) {
   if (!isPublicPath && !token) {
     return NextResponse.redirect(new URL("/", req.url));
   }
-  // Block seekers from /admin
   // @ts-ignore
   if (path.startsWith("/admin") && session?.user?.role !== "EMPLOYER") {
     return NextResponse.redirect(new URL("/", req.url));

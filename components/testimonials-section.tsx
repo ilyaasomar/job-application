@@ -42,7 +42,8 @@ export function TestimonialsSection() {
             Hear From Our Users
           </h2>
           <p className="text-lg text-muted-foreground text-pretty">
-            Discover how The Curator helps job seekers and employers connect easily.
+            Discover how The Curator helps job seekers and employers connect
+            easily.
           </p>
         </div>
 

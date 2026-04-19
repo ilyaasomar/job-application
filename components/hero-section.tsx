@@ -1,6 +1,3 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Search, MapPin, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 export function HeroSection() {
@@ -30,18 +27,15 @@ export function HeroSection() {
 
           {/* Subheadline */}
           <p className="text-lg md:text-xl text-white/80 mb-10 max-w-2xl mx-auto leading-relaxed text-pretty">
-            Create an account to browse job postings, apply to open roles, and track your applications. Employers can easily post jobs and review applicants.
+            Create an account to browse job postings, apply to open roles, and
+            track your applications. Employers can easily post jobs and review
+            applicants.
           </p>
 
           {/* Popular Searches */}
           <div className="mt-8 flex flex-wrap items-center justify-center gap-2">
             <span className="text-sm text-white/60">Popular Categories:</span>
-            {[
-              "Engineering",
-              "Design",
-              "Sales",
-              "Marketing",
-            ].map((term) => (
+            {["Engineering", "Design", "Sales", "Marketing"].map((term) => (
               <Link
                 key={term}
                 href={`/jobs?q=${encodeURIComponent(term)}`}
