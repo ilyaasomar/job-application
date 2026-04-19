@@ -20,11 +20,7 @@ const JobsPage = async () => {
       userId: userId,
     },
   });
-  const categories = await prisma.category.findMany({
-    where: {
-      userId: userId,
-    },
-  });
+  const categories = await prisma.category.findMany({});
   const formattedJobs = jobs.map((job, index) => ({
     serialNo: index + 1,
     id: job.id,
