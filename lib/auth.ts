@@ -61,7 +61,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
               data: {
                 name: user?.name as string,
                 email: user?.email as string,
-                avatarUrl: (user?.image as string) ?? "",
+                image: (user?.image as string) ?? "",
                 password: "",
                 role: "EMPLOYER",
               },
