@@ -12,28 +12,14 @@ import {
 } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 
-import { ActionDialog } from "@/components/admin/reusables/action-dialog";
-
-import {
-  InputGroup,
-  InputGroupAddon,
-  InputGroupText,
-  InputGroupTextarea,
-} from "@/components/ui/input-group";
 import { Button } from "@/components/ui/button";
 import { styles } from "@/app/styles";
-import {
-  Select,
-  SelectContent,
-  SelectGroup,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useEffect } from "react";
+import { CategoryActionDialog } from "./category-dialog";
 
 const formSchema = z.object({
   category_name: z
@@ -136,7 +122,7 @@ const CategoryActions = ({
     }
   }
   return (
-    <ActionDialog
+    <CategoryActionDialog
       open={isOpen}
       setOpen={setIsOpen}
       main_title={isEditMode ? "Update Category" : "Create Category"}
@@ -212,7 +198,7 @@ const CategoryActions = ({
           </Field>
         </FieldGroup>
       </form>
-    </ActionDialog>
+    </CategoryActionDialog>
   );
 };
 

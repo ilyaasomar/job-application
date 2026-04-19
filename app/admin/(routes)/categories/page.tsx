@@ -7,9 +7,6 @@ const CategoryPage = async () => {
   const session = await auth();
   const userId = session?.user?.id;
   const categories = await prisma.category.findMany({
-    where: {
-      userId: userId,
-    },
     orderBy: { createdAt: "desc" },
   });
   const formattedCategories = categories.map((category, index) => ({

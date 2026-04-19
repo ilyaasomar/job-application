@@ -17,7 +17,7 @@ export const PATCH = async (
       .join("-")
       .toLowerCase();
     const existCategory = await prisma.category.findUnique({
-      where: { id: categoryId, userId: userId },
+      where: { id: categoryId },
     });
     if (!existCategory) {
       return NextResponse.json(
@@ -28,7 +28,7 @@ export const PATCH = async (
     // check if category with the same slug already exists
     const check_if_duplicating_with_other_category =
       await prisma.category.findFirst({
-        where: { slug, id: { not: categoryId }, userId: userId },
+        where: { slug, id: { not: categoryId } },
       });
     if (check_if_duplicating_with_other_category) {
       return NextResponse.json(
@@ -39,7 +39,7 @@ export const PATCH = async (
       );
     }
     const updatedCategory = await prisma.category.update({
-      where: { id: categoryId, userId: userId },
+      where: { id: categoryId },
       data: {
         name: category_name,
         slug,
@@ -74,7 +74,6 @@ export const DELETE = async (
     const existCategory = await prisma.category.findUnique({
       where: {
         id: categoryId,
-        userId: userId,
       },
     });
     if (!existCategory) {
@@ -87,7 +86,6 @@ export const DELETE = async (
     const deletedCategory = await prisma.category.deleteMany({
       where: {
         id: categoryId,
-        userId: userId,
       },
     });
 
